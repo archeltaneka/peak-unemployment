@@ -1,0 +1,22 @@
+# Implementation ledger — V1 dashboard
+Plan: docs/superpowers/plans/2026-10-15-v1-dashboard.md
+- Approved design and native execution.
+- Ruling: use current checkout on feature branch, preserving untracked AGENTS.md and approved docs; no additional worktree for this empty application repository.
+- Ruling: approved neutral/teal visual direction is pinned; proceed without another concept tournament.
+- Shared contract: analytics -> aggregate API -> frontend. No Worker imports in frontend.
+- Task 1: in progress.
+- Task 1: complete; calendar/analytics suite passed (32 initial tests).
+- Task 2: complete; signed JWT mock and privacy tests passed. Regression tests reproduced and fixed malformed-row dropping and demo-source reuse after live-mode configuration failure.
+- Task 3: implemented; client stale-response and explorer tests pass. TypeScript passes. Browser verification in progress.
+- Ruling: custom Plotly bar/scatter/scattergeo bundle reduces chart JS from ~1.42 MB gzip to ~464 kB gzip; no chart CDN dependencies.
+- Ruling: optional dark mode, city detail, and choropleth excluded to keep V1 focused.
+- Task 4: README/setup/privacy documentation drafted; final review and checks pending.
+- Independent code review: fixed inherited Git `lib/` ignore excluding frontend helpers; fixed canonical filter-date storage after reproducing whitespace regression; added cache concurrency/expiry coverage.
+- Browser runtime compatibility: custom Plotly requires Vite `global: globalThis`; verified after stale optimizer cache reset.
+- Visual review: corrected inactive interval contrast (5.10:1) and mobile KPI definition positioning. Browser reproduced 413px popover edge at 390px before fix, then confirmed 367px edge after fix. Reviewer scored both findings resolved.
+- Verification: `bun install --frozen-lockfile` succeeded. `bun run check` passed 51 tests, strict TypeScript, Worker and client production builds. Expected Plotly chunk-size warning remains; optimized chart bundle is ~464 kB gzip.
+- Browser verification passed in Vite and production-built Wrangler preview: rendered charts, 1440/390px overflow checks, country and date-basis filters, activity controls, demo search/empty state, API routing, error and retry. No unexpected browser errors.
+- Task 3: complete. Task 4: final design documentation in progress.
+- No live credentials supplied; real Google Sheets access and deployment remain manual and unverified.
+- Additional production checks passed: actual map-marker click updates country filter; blocked map topology retains functional country filtering; unknown API navigation returns JSON 404; /.dev.vars never exposes local configuration.
+- Task 4: complete. DESIGN.md and .impeccable/design.json document the verified implementation; README and AGENTS.md are updated. Both independent review findings are resolved, all required local checks passed, and no remote deployment or push was performed.

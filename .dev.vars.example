@@ -1,0 +1,8 @@
+# Copy to .dev.vars for local synthetic demo mode. Production defaults to live.
+DATA_MODE=demo
+REPORTING_TIMEZONE=Australia/Melbourne
+# For local live mode, set DATA_MODE=live and configure all four values below.
+# GOOGLE_SERVICE_ACCOUNT_EMAIL=your-service-account@your-project.iam.gserviceaccount.com
+# GOOGLE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nYOUR_KEY\n-----END PRIVATE KEY-----\n"
+# GOOGLE_SHEET_ID=your-private-spreadsheet-id
+# GOOGLE_SHEET_RANGE="Applications!A1:O10001"
