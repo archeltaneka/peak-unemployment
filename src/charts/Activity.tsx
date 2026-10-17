@@ -21,14 +21,14 @@ export function Activity({
             type: "scatter" as const,
             mode: "lines" as const,
             fill: "tozeroy" as const,
-            line: { color: "#247265", width: 2.5 },
-            fillcolor: "rgba(57,131,119,0.10)",
+            line: { color: "#325ec4", width: 2.5 },
+            fillcolor: "rgba(50,94,196,0.08)",
           }
         : { type: "bar" as const }),
       x: points.map((p) => p.date),
       y: points.map((p) => (cumulative ? p.cumulative : p.count)),
       name: cumulative ? "Cumulative" : "Applications",
-      marker: { color: points.map((p) => (p.partial ? "#b7cfc7" : "#398377")) },
+      marker: { color: points.map((p) => (p.partial ? "#b8c6df" : "#325ec4")) },
       customdata: points.map((p) =>
         p.partial ? "Partial period" : "Complete period",
       ),
@@ -104,7 +104,7 @@ export function Activity({
             },
             yaxis: {
               rangemode: "tozero",
-              gridcolor: "#e8ede8",
+              gridcolor: "#dedfdc",
               zeroline: false,
               fixedrange: true,
               tickformat: ".0f",

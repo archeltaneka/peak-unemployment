@@ -43,12 +43,14 @@ export function Methodology() {
         <details>
           <summary>What is public, and what stays private?</summary>
           <p>
-            Live mode exposes aggregate counts and reviewed category labels
-            only. Notes, company-level details, URLs, contact information and
-            credentials stay off the public API. Unknown labels are grouped as
-            Unknown. Small filtered cohorts may still be identifiable; this is
-            not a statistical anonymity guarantee. The explorer is always
-            fictional.
+            Live mode exposes aggregate counts and approved application fields:
+            company, role, country, source, tier, current status and application
+            date. Notes, URLs, contacts and credentials stay private. Unknown
+            category labels are grouped as Unknown. Explorer controls are
+            independent of dashboard filters; missing or invalid application
+            dates do not imply an application was never submitted. Demo mode
+            uses fictional records. Live records identify individual
+            applications.
           </p>
         </details>
       </div>

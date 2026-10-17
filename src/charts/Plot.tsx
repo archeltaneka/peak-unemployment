@@ -27,10 +27,10 @@ export default function Chart({ layout, ...props }: ChartProps) {
           plot_bgcolor: "transparent",
           font: {
             family: "Manrope Variable, sans-serif",
-            size: 11,
-            color: "#63706b",
+            size: 12,
+            color: "#52627b",
           },
-          hoverlabel: { bgcolor: "#183f37", font: { color: "#fff", size: 12 } },
+          hoverlabel: { bgcolor: "#172d4d", font: { color: "#fff", size: 12 } },
           ...layout,
         }}
         config={{

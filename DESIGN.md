@@ -1,34 +1,26 @@
 ---
 name: "Peak Unemployment"
-description: "A neutral, compact analytics workspace with restrained teal accents."
+description: "Atlas: an editorial job-search dashboard on paper, with navy ink and cobalt selection."
 colors:
-  accent: "#176458"
-  ink: "#253b34"
-  muted: "#63706b"
-  canvas: "#f5f6f3"
-  surface: "#fff"
-  border: "#e2e7df"
-  header: "#fbfcf9"
-  filter-surface: "#eef1eb"
-  control-border: "#d8dfd6"
-  control-ink: "#31483d"
-  hover-surface: "#edf3ed"
-  hover-ink: "#124e43"
-  focus: "#318b76"
-  segmented-surface: "#f0f3ee"
-  segmented-ink: "#5b6a60"
-  segmented-selected-ink: "#254a3a"
-  demo-surface: "#f1ead8"
-  demo-ink: "#75602e"
-  live-surface: "#e2efe7"
-  live-ink: "#215b46"
-  tooltip: "#25483a"
-  activity: "#398377"
-  activity-partial: "#b7cfc7"
-  activity-average: "#ae7838"
-  distribution-role: "#548f84"
-  distribution-source: "#648b9c"
-  distribution-tier: "#9b8965"
+  accent: "#325ec4"
+  ink: "#172d4d"
+  muted: "#52627b"
+  surface: "#f5f1e8"
+  border: "#cbd0d5"
+  ledger: "#eeece5"
+  route-neutral: "#e0e2e8"
+  route-line: "#aab9cf"
+  route-green: "#246348"
+  route-green-surface: "#e0ebe1"
+  route-green-line: "#83a98d"
+  route-red: "#963f38"
+  route-red-surface: "#f2dfda"
+  route-red-line: "#b96359"
+  hover-surface: "#e5e9ef"
+  demo-surface: "#e0e7f3"
+  demo-ink: "#294d9d"
+  live-surface: "#dce9e1"
+  live-ink: "#20583d"
   status-discovered: "#818b98"
   status-preparing: "#7886aa"
   status-applied: "#4b8d86"
@@ -41,192 +33,135 @@ colors:
   status-unknown: "#91978d"
 typography:
   display:
-    fontFamily: "Manrope Variable, sans-serif"
-    fontSize: "38px"
-    fontWeight: 800
-    lineHeight: 1.2
+    fontFamily: "DM Serif Display, Georgia, serif"
+    fontSize: "clamp(76px, 8vw, 123px)"
+    fontWeight: 400
+    lineHeight: 0.78
     letterSpacing: "-0.04em"
-  title:
-    fontFamily: "Manrope Variable, sans-serif"
-    fontSize: "17px"
-    fontWeight: 750
+  headline:
+    fontFamily: "DM Serif Display, Georgia, serif"
+    fontSize: "30px"
+    fontWeight: 400
+    lineHeight: 1.15
     letterSpacing: "-0.025em"
   metric:
-    fontFamily: "Manrope Variable, sans-serif"
-    fontSize: "36px"
-    fontWeight: 750
-    lineHeight: 1.4
-    letterSpacing: "-0.04em"
+    fontFamily: "DM Serif Display, Georgia, serif"
+    fontSize: "34px"
+    fontWeight: 400
+    lineHeight: 1.2
   body:
     fontFamily: "Manrope Variable, sans-serif"
-    fontSize: "12px"
     fontWeight: 450
-    lineHeight: 1.65
+    lineHeight: 1.6
   label:
     fontFamily: "Manrope Variable, sans-serif"
     fontSize: "11px"
     fontWeight: 650
-  chart:
-    fontFamily: "Manrope Variable, sans-serif"
-    fontSize: "11px"
+  navigation:
+    fontFamily: "Georgia, serif"
+    fontSize: "20px"
 rounded:
-  segment: "4px"
-  badge: "5px"
-  button: "6px"
-  input: "7px"
-  tooltip: "8px"
-  panel: "14px"
+  control: "4px"
+  segment: "2px"
+  badge: "20px"
 spacing:
-  control-gap: "10px"
-  field-gap: "12px"
-  mobile-panel: "18px"
-  panel-gap: "20px"
-  panel: "23px"
-  section: "24px"
-  desktop-gutter: "48px"
+  small: "12px"
+  medium: "24px"
+  large: "32px"
 components:
   button:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.button}"
-    padding: "7px 12px"
-  button-hover:
-    backgroundColor: "{colors.hover-surface}"
-    textColor: "{colors.hover-ink}"
-  button-text:
     backgroundColor: "transparent"
-    textColor: "{colors.accent}"
-    padding: "2px 0"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.control}"
+    padding: "9px 13px"
   input:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.control-ink}"
-    rounded: "{rounded.input}"
-    height: "39px"
-    padding: "0 10px"
-  panel:
-    backgroundColor: "{colors.surface}"
-    rounded: "{rounded.panel}"
-    padding: "23px"
+    backgroundColor: "transparent"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.control}"
+    height: "38px"
+    padding: "0 9px"
   demo-badge:
     backgroundColor: "{colors.demo-surface}"
     textColor: "{colors.demo-ink}"
     rounded: "{rounded.badge}"
-    padding: "5px 9px"
-  live-badge:
-    backgroundColor: "{colors.live-surface}"
-    textColor: "{colors.live-ink}"
-    rounded: "{rounded.badge}"
-    padding: "5px 9px"
-  segmented-button:
-    backgroundColor: "transparent"
-    textColor: "{colors.segmented-ink}"
-    rounded: "{rounded.segment}"
-    padding: "5px 9px"
-  segmented-button-selected:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.segmented-selected-ink}"
+    padding: "5px 10px"
 ---
 
 # Design System: Peak Unemployment
 
 ## Overview
 
-**Creative North Star: "Neutral compact analytics workspace"**
+**Creative North Star: “Atlas”**
 
-Peak Unemployment uses a quiet neutral canvas, white analytical panels, and restrained teal accents. Its professional, slightly playful character comes from concise language and a clear hierarchy, with the evidence carrying the visual weight.
+An editorial atlas of a personal job search: paper, navy ink, serif headlines, large circular route markers, green offer-path and red rejected-path accents. The approved direction is `.impeccable/mocks/decision/atlas.webp`. The identity applies across the dashboard, from its fixed index to its ruled chart spreads and application ledger.
 
-Compact controls, tabular numerals, and aligned counts support scanning. Tonal separation and fine borders organize the interface; motion is limited to short control feedback and scrolling. The system remains independent of the owner’s portfolio identity.
+The voice stays professional and lightly playful. Strong headline and number hierarchy introduces the story; explicit definitions, provenance, and chart alternatives support scrutiny.
 
-**Key Characteristics:**
-- Neutral surfaces with restrained teal emphasis.
-- Compact controls and clear numerical hierarchy.
-- Flat analytical panels with fine borders.
-- Readable chart labels and accessible table alternatives.
+Key characteristics:
+
+- Paper canvas with flat, ruled analytical sections.
+- DM Serif Display headlines and numbers, Manrope controls and evidence.
+- A current-status route with enlarged count circles and inline cohort shares.
+- Compact global controls and an independently filtered application ledger.
 
 ## Colors
 
-The palette combines green-tinted neutrals with muted teal; semantic chart colors provide distinctions without competing with the data. The frontmatter records the implementation’s values, including CSS shorthand where used.
+Cobalt is the control accent; navy supplies text and the Total tracked circle. The route toward Offer uses green; Rejected uses red and Unknown stays neutral. Labels accompany every color. Muted blue-gray supports labels, while warm paper and ledger surfaces keep long analytical sections cohesive. The normative values are in the frontmatter and `src/styles.css`.
 
-### Primary
-
-**Restrained teal** (`accent`) identifies actions, heading emphasis, checkbox selection, and expandable chart data. `activity` is the stronger chart fill; `activity-partial` distinguishes incomplete periods. The amber `activity-average` is reserved for the daily average series.
-
-### Neutral
-
-**Soft neutral canvas** (`canvas`) sits behind **white analytical surfaces** (`surface`). `header` and `filter-surface` provide quiet grouping. `ink` carries primary text, `muted` carries supporting labels, and `border` separates regions. Control and segmented tokens preserve the specific contrast treatments implemented for fields and interval selection.
-
-### Semantic colors
-
-Demo provenance uses `demo-surface` and `demo-ink`; live provenance uses the corresponding live pair. Status tokens retain the exact shared mapping from `src/lib/presentation.ts`: Discovered, Preparing, Applied, Recruiter Screen, Interview, Technical, Final, Offer, Rejected, and Unknown. Role, source, and tier distributions use their distinct muted chart colors. These are data encodings, not additional brand accents.
-
-**The Labeled Color Rule.** Color reinforces explicit labels and counts; it never replaces them.
+Route circles are neutral until selected, when they become cobalt with white numbers. This selection color does not encode recruitment status. Status dots in the Explorer retain the reviewed mapping in `src/lib/presentation.ts`. Live and demo badges have distinct labeled treatments; color never replaces their text.
 
 ## Typography
 
-Manrope Variable is self-hosted and used throughout, with sans-serif fallback. There is no separate display or monospace family. Tabular numerals align metrics and tables; heavier weights and slightly tight heading spacing establish hierarchy.
+DM Serif Display and Manrope Variable are bundled locally through Fontsource. Georgia provides the desktop index and tagline. Headings use regular serif weight; compact labels and controls use Manrope. Chart labels use Manrope at 12px with muted ink, and numbers use tabular figures where supported.
 
-The display token describes the desktop page title. It becomes 29px at the 800px breakpoint and 30px at 540px. Panel titles use the title role, becoming 16px on small screens. Metrics use the metric role, changing to 32px and then 34px at those breakpoints. Supporting copy ranges from 10–13px; the body token describes the recurring 12px copy treatment, not a universal paragraph override. Form labels use the label role. Plotly labels use the chart role and muted color. Compact table headers and footnotes use 9–10px. Preserve zoom and responsive wrapping rather than assuming every label fits a fixed desktop width.
+The desktop masthead uses the display token above; at 1250px it becomes `clamp(64px, 7.5vw, 100px)`, at 950px `clamp(56px, 10.7vw, 100px)`, and at 650px `clamp(38px, 10.4vw, 68px)` with 0.94 line height. Section headings generally range from 27px to 36px. The desktop tagline scales from 20px to 28px, becoming 20px on phones.
 
 ## Layout
 
-The main container is centered with a maximum width of 1440px and 48px horizontal padding. Gutters reduce to 28px at 1200px, 20px at 800px, and 14px at 540px. The header is 78px tall, becoming 65px at 800px; above 1500px its contents align with the main content width.
+Above 1250px, a fixed 240px left index anchors the page; the main area offsets by the same width and uses 40px horizontal padding. At 1250px, the index narrows to 190px and main padding to 28px. At 950px and below, the index becomes a normal-flow top header with horizontally scrollable navigation and 24px page padding. At 650px and below, page padding is 18px. Above 1800px, main padding grows to 60px.
 
-The desktop filter grid has eight tracks, then four at 1200px and two at 540px, where the first and last fields span both columns. The KPI strip has six columns, then three at 800px and two at 540px. Dividers follow the actual column boundaries.
+The opening sequence is masthead and provenance, compact filters, then the enlarged route with inline counts and shares. Submission activity shares a ruled spread with a metrics sidebar. Geography pairs its map with a country table; distributions use three columns, two below 1250px, and one below 650px. Follow-ups, the Explorer ledger, and methodology complete the page.
 
-Analytical panels use 20px grid gaps and 23px padding, reducing padding to 20px at 1200px and 18px at 540px. The primary comparison uses a 1.8:1 ratio on desktop, 1.5:1 at 1200px, and stacks at 800px. Geography also stacks at 800px. Distribution panels move from three columns to two at 1200px and one at 540px. Explorer fields collapse from three columns to two and then one. Its wide table retains an 850px minimum width and scrolls inside its panel. Methodology becomes a single column at 800px.
+The nine main route stations run horizontally above 650px and vertically below. Rejected branches separately; Unknown is separate when present or its count is unavailable. There is no station selection or detail panel. Activity, geography, follow-ups, and methodology become single-column sections at 650px. Tables preserve their columns with local horizontal scrolling.
 
 ## Elevation & Depth
 
-Panels are flat: fine borders and tonal backgrounds create grouping without resting card shadows. Only the selected segment and definition popup use small shadows. The selected segment uses `0 1px 3px #19342915`; definition popups use `0 5px 16px #183d3220`. These identify a selected control and an overlaid explanation, respectively.
+Use paper tones, rules, and count circles to establish hierarchy. Analytical panels remain flat. Definition popovers alone use `0 5px 16px #172d4d20`, with navy backgrounds and light text. Avoid adding general card shadows.
+
+Motion is bounded: a 750ms connector reveal and two 1800ms ring pulses around stationary nodes, with at most 360ms delay. Everything finishes within four seconds; there is no infinite loop or implied record movement. Reduced-motion preferences keep the route completely still.
 
 ## Shapes
 
-Rounded rectangles define the system. Panels and filter containers use the panel radius; buttons, inputs, badges, segments, and tooltips use the smaller frontmatter radii. Borders are generally a single pixel. Small circular dots mark provenance and status; horizontal snapshot tracks have gently rounded ends. Avoid turning compact controls into large pill-shaped calls to action.
+Controls have 4px corners; segmented interiors have 2px corners. Main and branch circles are 96px on wide screens, 72px on compact desktops, 76px at top-navigation widths, 64px from 651–800px, and 76px on phones. Badges use pill shapes. Section boundaries are thin rules, not raised card frames.
 
 ## Components
 
-### Buttons and navigation
+### Controls and navigation
 
-Default buttons are compact white controls with a fine neutral border. Hover uses the hover surface and ink tokens. Text buttons remove the border and use teal for reset and clear actions. Disabled controls have 0.45 opacity and a not-allowed cursor. Interactive elements use a 3px focus outline in the focus color, offset by 3px. Button background transitions take 0.12s. Reduced-motion preferences remove transitions and smooth scrolling.
+Buttons use transparent fills, a blue-gray border, and navy text. Hover introduces a pale blue-gray fill and cobalt text. Keyboard focus is a 2px cobalt outline offset by 4px. Disabled buttons reduce opacity and use the unavailable cursor. Desktop navigation uses Georgia with a cobalt left rule on hover or focus; the top navigation uses Manrope at 12px.
 
-Header navigation is a simple horizontal text row: 12px and weight 600 on desktop, 10px at 800px. Hover changes the text to teal. The Overview anchor is hidden at 540px while Explorer and Methodology remain. No active-tab styling is implemented.
+### Filters
 
-### Inputs and filters
+Date basis, country, role type, current status, and reset stay visible. A native disclosure contains From, To, Source, and Tier, and indicates when these contain active values. All aggregate panels share these filters; activity continues to plot submission dates. On mobile, fields form two columns and reset receives its own row.
 
-White inputs and native selects use the input token, a fine control border, and 12px text. Labels sit above fields with a 7px gap. Search and select controls share this language; checkboxes are compact native controls with the accent color. The filter group uses a softly tinted surface and a clear reset action.
+### Current-status route
 
-### Segmented interval control
+Stations are static labeled counts with cohort shares directly beneath them. They have no button semantics, selection state, detail panel, or scroll action. The green path ends at Offer, which does not imply acceptance. Rejected branches from Total tracked in red and remains a separate terminal outcome. Unknown is neutral. No connector or animation claims historical movement or conversion.
 
-The interval group uses a muted surface, 3px internal padding, and a 2px gap. Unselected labels use the explicit segmented ink token. The selected button uses white, stronger green text, weight 700, and the small selection shadow. Selection is exposed with `aria-pressed`. Mobile button padding becomes 5px 12px.
+### Charts and metrics
 
-### Badges and provenance
+Plotly backgrounds are transparent, hover labels navy, and the mode bar hidden. Each plot has a tabular alternative; the visual plot is hidden from assistive technology. Activity sits beside a two-column metric grid. Definitions use native disclosures, and quality warnings remain visible without inventing missing data.
 
-Provenance badges are compact rounded rectangles with 10px bold labels and an optional small dot. Demo and live states use distinct semantic pairs; both always have text. The mobile provenance block moves beneath the page title and aligns left. Neutral count badges use the same compact geometry.
+### Explorer ledger
 
-### Panels, metrics, and definitions
-
-White panels use a thin border, restrained corners, a title, and muted supporting text. The KPI strip joins metrics in one shared surface with internal dividers. Metric labels include native disclosure controls for definitions. Definition popups are 210px wide, use a dark green surface and white text, and align toward the inside of their grid: the last desktop item, every third tablet item, and every second small-screen item anchor to the right. Keep popup positioning tied to responsive columns so explanations remain inside the viewport.
-
-### Charts and tables
-
-Charts use transparent backgrounds, muted labels, subtle gridlines, and no Plotly mode bar. Activity bars distinguish partial periods; the cumulative series uses a restrained teal line and translucent fill. Geography uses proportional teal circles on muted land, with a country table as an alternative interaction. Snapshot bars describe current status, with rejected outcomes visually separated by a dashed divider. Table disclosures accompany charts. Tables use fine horizontal separators, compact headers, aligned values, and local overflow where needed.
-
-### Feedback states
-
-Loading uses quiet neutral placeholder blocks with explanatory text. Empty states center a concise message within the analytical area. Errors and quality notices use warm tinted surfaces with text and controls, not color alone. During an aggregate refresh, existing dashboard content is dimmed to 0.55 opacity and its pointer interactions are suppressed while the request status remains visible.
+A muted paper surface, navy top rule, generous rows, and minimal status dots distinguish the application record table. Search, country, status, sorting, and pagination act on approved fields returned by `/api/explorer`, independently of aggregate filters. Show live or synthetic provenance, plus loading and retry states. The table region is keyboard focusable, has a visible focus outline, and includes a horizontal-scroll hint at narrower widths.
 
 ## Do's and Don'ts
 
-### Do:
-- Do preserve explicit live and synthetic provenance labels.
-- Do pair chart colors with labels, counts, and accessible data tables.
-- Do keep status colors consistent across snapshot bars and record labels.
-- Do retain visible keyboard focus and reduced-motion behavior.
-- Do let mobile layouts stack while wide tables scroll within their containers.
-
-### Don't:
-- Don’t use decorative funnels or imply historical recruitment transitions.
-- Don’t style rejected outcomes as the next sequential recruitment stage.
-- Don’t substitute color alone for meaning or selection state.
-- Don’t add decorative motion, gradients, or elevated panel shadows to this restrained system.
-- Don’t hide synthetic provenance or mix explorer controls with the aggregate cohort.
+- Do preserve explicit live/demo provenance and fixed demo reporting-date labeling.
+- Do use rules and spacing to organize evidence, with serif headlines and numbers.
+- Do preserve keyboard focus, chart tables, empty/error/loading states, and reduced-motion behavior.
+- Do show current counts and correct denominators; never invent stage history.
+- Don't connect Rejected as the step after Offer or label cohort shares as conversion rates.
+- Publish only the approved Explorer fields; keep Notes, URLs, contacts and other source fields private. Keep Explorer controls independent of live aggregate filters.
+- Don't restore the superseded teal interface palette, rounded card grid, or former top-only desktop navigation.

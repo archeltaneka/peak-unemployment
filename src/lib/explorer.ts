@@ -1,22 +1,12 @@
-export interface DemoRecord {
-  id: number;
-  company: string;
-  role: string;
-  country: string;
-  roleType: string;
-  source: string;
-  tier: string;
-  status: string;
-  applied: string | null;
-}
+import type { ExplorerRecord } from "../types/dashboard";
 export type SortKey =
   "company" | "role" | "country" | "source" | "tier" | "status" | "applied";
 export function filterExplorer(
-  rows: DemoRecord[],
+  rows: ExplorerRecord[],
   filters: { search: string; country: string; status: string },
   sort: SortKey,
   descending: boolean,
-): DemoRecord[] {
+): ExplorerRecord[] {
   return rows
     .filter(
       (r) =>

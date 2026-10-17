@@ -74,3 +74,22 @@ export interface DashboardResponse extends DashboardData {
   timezone: string;
   fetchedAt: string;
 }
+
+// Approved public row fields. Never extend this with raw spreadsheet records.
+export interface ExplorerRecord {
+  id: number;
+  company: string;
+  role: string;
+  country: string;
+  source: string;
+  tier: string;
+  status: string;
+  applied: string | null;
+}
+export interface ExplorerResponse {
+  records: ExplorerRecord[];
+  mode: "demo" | "live";
+  today: string;
+  timezone: string;
+  fetchedAt: string;
+}

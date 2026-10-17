@@ -21,48 +21,44 @@ export default function Dashboard() {
         Skip to dashboard
       </a>
       <header className="site-header">
-        <a href="#" className="wordmark" aria-label="Peak Unemployment home">
-          <svg width="32" height="32" viewBox="0 0 40 40" aria-hidden="true">
-            <rect width="40" height="40" rx="10" fill="currentColor" />
-            <path
-              d="M8 28 17 13 23 22 28 16 33 28"
-              fill="none"
-              stroke="#fff"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-          <span>
-            peak unemployment<span className="wordmark-dot">.</span>
-          </span>
+        <a
+          href="#overview"
+          className="wordmark"
+          aria-label="Peak Unemployment home"
+        >
+          Peak
+          <br />
+          Unemployment<span className="wordmark-dot">.</span>
         </a>
+        <p className="brand-description">
+          A job search, quantified.
+          <br />A personal analytics portfolio.
+        </p>
         <nav aria-label="Main navigation">
           <a href="#overview">Overview</a>
+          <a href="#journey">The journey</a>
+          <a href="#activity">Activity</a>
+          <a href="#geography">Geography</a>
           <a href="#explorer">Explorer</a>
           <a href="#methodology">Methodology</a>
         </nav>
-        <span className="header-note">A job search, quantified.</span>
+        <p className="header-note">
+          Same applications.
+          <br />A different perspective.
+        </p>
       </header>
       <main id="main">
         <div className="page-heading" id="overview">
           <div>
             <h1>
-              Peak Unemployment<span>.</span>
+              <span className="title-line">Peak</span>
+              <span className="title-line">
+                Unemployment<span className="wordmark-dot">.</span>
+              </span>
             </h1>
             <p>Because apparently even unemployment needs KPIs.</p>
           </div>
           <div className="provenance">
-            <span
-              className={data?.mode === "live" ? "live-badge" : "demo-badge"}
-            >
-              <i />
-              {data
-                ? data.mode === "live"
-                  ? "Live aggregate data"
-                  : "Synthetic demo data"
-                : "Connecting to dashboard"}
-            </span>
             {data && (
               <small>
                 As of {data.today} · {data.timezone}
@@ -101,10 +97,6 @@ export default function Dashboard() {
             <h2>Taking a brief pause.</h2>
             <p>{error}</p>
             <button onClick={retry}>Try again</button>
-            <p className="small">
-              For local setup, check DATA_MODE and Worker configuration. Private
-              error details stay private.
-            </p>
           </div>
         )}
         {!data && loading && (
@@ -122,7 +114,15 @@ export default function Dashboard() {
             }
             aria-busy={loading}
           >
-            <Kpis values={data.kpis} />
+            <Pipeline groups={data.pipeline} total={data.kpis.opportunities} />
+            <div className="evidence-spread" id="activity">
+              <Activity activity={data.activity} />
+              <aside className="metrics-aside" aria-labelledby="metrics-title">
+                <h2 id="metrics-title">Submission metrics</h2>
+                <p>Dates verified. Definitions included.</p>
+                <Kpis values={data.kpis} />
+              </aside>
+            </div>
             {(data.quality.records > 0 ||
               data.quality.missingFilterDates > 0) && (
               <details className="quality">
@@ -147,13 +147,6 @@ export default function Dashboard() {
                 </ul>
               </details>
             )}
-            <div className="primary-grid">
-              <Activity activity={data.activity} />
-              <Pipeline
-                groups={data.pipeline}
-                total={data.kpis.opportunities}
-              />
-            </div>
             <Geography
               groups={data.geography}
               total={data.kpis.submitted}
@@ -174,14 +167,14 @@ export default function Dashboard() {
                 description="Where the opportunities started · submissions"
                 groups={data.sources}
                 total={data.kpis.submitted}
-                color="#648b9c"
+                color="#59799a"
               />
               <Distribution
                 title="Priority mix"
                 description="A little intention behind the effort · submissions"
                 groups={data.tiers}
                 total={data.kpis.submitted}
-                color="#9b8965"
+                color="#9a7852"
               />
             </div>
             <Panel

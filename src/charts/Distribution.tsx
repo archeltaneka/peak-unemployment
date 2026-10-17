@@ -7,7 +7,7 @@ export function Distribution({
   description,
   groups,
   total,
-  color = "#548f84",
+  color = "#325ec4",
 }: {
   title: string;
   description: string;
@@ -49,7 +49,7 @@ export function Distribution({
             bargap: 0.5,
             xaxis: {
               showgrid: true,
-              gridcolor: "#edf0eb",
+              gridcolor: "#dedfdc",
               zeroline: false,
               fixedrange: true,
               rangemode: "tozero",
@@ -58,7 +58,7 @@ export function Distribution({
             yaxis: {
               autorange: "reversed",
               fixedrange: true,
-              tickfont: { size: 10 },
+              tickfont: { size: 12 },
             },
             showlegend: false,
           }}

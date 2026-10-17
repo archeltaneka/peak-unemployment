@@ -1,3 +1,4 @@
+import { buildExplorer } from "./explorer";
 import demoCsv from "../data/demo/applications.csv?raw";
 import { buildDashboard } from "./analytics";
 import { parseCsv } from "./csv";
@@ -34,7 +35,7 @@ export function createHandler(injected?: DataSource) {
     if (request.method !== "GET")
       return json({ error: "Method not allowed" }, 405);
     if (url.pathname === "/api/health") return json({ status: "ok" });
-    if (url.pathname !== "/api/dashboard")
+    if (url.pathname !== "/api/dashboard" && url.pathname !== "/api/explorer")
       return json({ error: "Not found" }, 404);
     try {
       if (url.search.length > 2048) throw new InvalidFilters();
@@ -87,6 +88,15 @@ export function createHandler(injected?: DataSource) {
         } finally {
           if (pending === read) pending = undefined;
         }
+      }
+      if (url.pathname === "/api/explorer") {
+        return json({
+          records: buildExplorer(snapshot.rows, today),
+          mode,
+          today,
+          timezone,
+          fetchedAt: snapshot.fetchedAt,
+        });
       }
       return json({
         ...buildDashboard(

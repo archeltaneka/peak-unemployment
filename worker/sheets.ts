@@ -20,7 +20,9 @@ export class SheetsSource implements DataSource {
   private token: { value: string; expires: number } | null = null;
   constructor(
     private config: SheetConfig,
-    private fetcher: typeof fetch = fetch,
+    // Keep native fetch on its global receiver; workerd rejects `this.fetcher()`
+    // when a platform function is stored directly on a class instance.
+    private fetcher: typeof fetch = (input, init) => fetch(input, init),
   ) {}
   private async accessToken(): Promise<string> {
     if (this.token && this.token.expires > Date.now()) return this.token.value;

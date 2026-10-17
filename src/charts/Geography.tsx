@@ -18,6 +18,7 @@ export function Geography({
   const max = Math.max(1, ...plotted.map((g) => g.count));
   return (
     <Panel
+      id="geography"
       title="The search, mapped"
       description="Eligible submissions by country. Select a country to explore."
       className="geography"
@@ -55,7 +56,7 @@ export function Geography({
                     sizemode: "area",
                     sizeref: (2 * max) / 42 ** 2,
                     sizemin: 4,
-                    color: "#2c8170",
+                    color: "#325ec4",
                     opacity: 0.75,
                     line: { width: 1.5, color: "#fff" },
                   },
@@ -80,9 +81,9 @@ export function Geography({
                   showframe: false,
                   showcoastlines: false,
                   showland: true,
-                  landcolor: "#e7ebe5",
+                  landcolor: "#dce0e5",
                   showcountries: true,
-                  countrycolor: "#fff",
+                  countrycolor: "#f5f1e8",
                   bgcolor: "transparent",
                   lataxis: { range: [-60, 85] },
                 },

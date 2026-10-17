@@ -24,7 +24,7 @@ const rows = [
     applied: null,
   },
 ];
-it("searches and filters only demo records", () => {
+it("searches and filters application records", () => {
   expect(
     filterExplorer(
       rows,

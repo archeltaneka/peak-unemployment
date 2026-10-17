@@ -104,3 +104,49 @@ it("signs a read-only JWT, exchanges it and reads a sheet", async () => {
 });
 it("rejects malformed non-array source rows instead of silently dropping them", () =>
   expect(() => recordsFromValues([headers, "bad row"])).toThrow());
+it("uses the native fetch receiver when no custom fetcher is injected", async () => {
+  const key = await crypto.subtle.generateKey(
+    {
+      name: "RSASSA-PKCS1-v1_5",
+      modulusLength: 2048,
+      publicExponent: new Uint8Array([1, 0, 1]),
+      hash: "SHA-256",
+    },
+    true,
+    ["sign", "verify"],
+  );
+  const bytes = new Uint8Array(
+    await crypto.subtle.exportKey("pkcs8", key.privateKey),
+  );
+  const pem =
+    "-----BEGIN PRIVATE KEY-----\n" +
+    btoa(String.fromCharCode(...bytes)) +
+    "\n-----END PRIVATE KEY-----";
+  const originalFetch = globalThis.fetch;
+  try {
+    // workerd rejects a platform fetch called with a class instance as `this`.
+    globalThis.fetch = async function (
+      this: unknown,
+      input: RequestInfo | URL,
+    ) {
+      if (this !== undefined && this !== globalThis)
+        throw new TypeError("Illegal invocation");
+      return String(input).startsWith("https://oauth2.googleapis.com/")
+        ? Response.json({ access_token: "test-token", expires_in: 3600 })
+        : Response.json({ values: [headers, ["Demo"]] });
+    } as typeof fetch;
+    const source = new SheetsSource({
+      GOOGLE_SERVICE_ACCOUNT_EMAIL: "test@example.com",
+      GOOGLE_PRIVATE_KEY: pem,
+      GOOGLE_SHEET_ID: "test-sheet",
+      GOOGLE_SHEET_RANGE: "Applications!A:O",
+    });
+    await expect(source.read()).resolves.toEqual([
+      Object.fromEntries(
+        headers.map((header, index) => [header, index === 0 ? "Demo" : ""]),
+      ),
+    ]);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});

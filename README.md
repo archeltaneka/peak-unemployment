@@ -2,7 +2,11 @@
 
 **Because apparently even unemployment needs KPIs.**
 
-A public job application analytics dashboard and Product Analytics / Data Science portfolio project. Google Sheets stays private; the browser receives aggregate statistics. The searchable Application Explorer always uses fictional, reviewed demo records.
+A public job application analytics dashboard and Product Analytics / Data Science portfolio project. Google Sheets stays private; the browser receives aggregate statistics and explicitly approved application fields. In live mode, Application Explorer reads company, role, country, source, tier, current status, and application date from the Sheet. Demo mode uses fictional records.
+
+The Atlas interface combines a paper canvas, navy ink, cobalt selection, locally bundled DM Serif Display and Manrope, and an editorial index. A fixed desktop index becomes top navigation on smaller screens. Compact global filters lead into the current-status route; activity and submission metrics share a spread, followed by ruled charts and a fictional application ledger. See [DESIGN.md](DESIGN.md) for the visual system.
+
+The interactive route maps **current status** from Total tracked through Discovered, Preparing, Applied, Recruiter Screen, Interview, Technical, Final, and Offer, with Rejected on a separate branch. Large static circles show counts and cohort shares directly. The path toward Offer is green, Rejected is red, and Unknown is neutral. Offer does not imply acceptance. Brief ring pulses and connector reveals finish within four seconds and are disabled for reduced motion. At 650px and below the route becomes vertical. Dates, source, and tier are available in the filter disclosure. Explorer controls remain independent of aggregate filters; its wide table supports local keyboard scrolling.
 
 ## Stack and architecture
 
@@ -12,9 +16,9 @@ One Cloudflare Worker serves the frontend and `/api/*`. There is no database, ac
 
 - `worker/` — CSV/Sheets access, private row validation, normalization, filtering, aggregation, and API routing.
 - `src/types/dashboard.ts` — public aggregate contracts. Frontend code never imports `worker/`.
-- `src/components/`, `src/charts/`, `src/pages/` — responsive UI, chart alternatives, and synthetic explorer.
+- `src/components/`, `src/charts/`, `src/pages/` — responsive UI, chart alternatives, and application explorer.
 - `data/demo/applications.csv` — fictional source fixture, bundled into the Worker only.
-- `data/demo/explorer.json` — separately reviewed fictional records allowed in the browser.
+- `data/demo/explorer.json` — legacy fictional fixture; Explorer now reads the Worker API in both modes.
 - `tests/` — calendar, analytics, source/authentication, public API privacy, and client race-condition tests.
 
 ## Run locally
@@ -94,7 +98,7 @@ bun run deploy
 
 Supply each value when prompted. For `GOOGLE_PRIVATE_KEY`, paste the PEM key or securely pipe the PEM file into that command. Keep files containing credentials outside this repository. Rotate/revoke service-account keys when no longer needed.
 
-If Wrangler needs the Worker to exist before uploading secrets, create it in the Cloudflare dashboard first, or deploy once before adding secrets. An unconfigured live deployment returns 503 for `/api/dashboard` and never substitutes demo statistics.
+If Wrangler needs the Worker to exist before uploading secrets, create it in the Cloudflare dashboard first, or deploy once before adding secrets. An unconfigured live deployment returns 503 for `/api/dashboard` and `/api/explorer` and never substitutes demo statistics.
 
 `REPORTING_TIMEZONE` is a non-secret Wrangler variable; set it to your reporting IANA timezone. To deliberately publish a **demo-only** version, change `DATA_MODE` to `demo` in `wrangler.jsonc`, then deploy. The public UI will label it synthetic. Return that setting to `live` for live data.
 
@@ -123,17 +127,17 @@ Submission eligibility requires a valid, nonfuture Date Applied and no submissio
 
 Unknown status with a valid, consistent applied date counts as submitted but cannot be assigned an active or terminal outcome. Invalid dates are never converted to zero. A missing/invalid Date Found is flagged and does not by itself invalidate an otherwise eligible submission. Quality issue counts can overlap.
 
-| Metric | Definition |
-| --- | --- |
-| Total opportunities | All records in the filtered cohort, including conflicts and pre-submission states |
-| Submitted applications | Eligible submissions in that cohort |
-| Active applications | Eligible records currently Applied, Recruiter Screen, Interview, Technical, or Final |
-| Current interview pipeline | Eligible records currently Recruiter Screen, Interview, Technical, or Final |
-| Offers | Eligible records currently Offer |
-| Rejections | Eligible records currently Rejected; never inferred from silence |
-| Current status snapshot | All filtered opportunities by current status, including conflicts and Unknown; Rejected is shown separately |
-| Country / role / source / priority | Eligible submissions; percentages divide by the filtered submitted count |
-| Follow-ups | Eligible active applications with valid Follow-up Date: before today = overdue, today = due, after today = upcoming |
+| Metric                             | Definition                                                                                                                                                                                                           |
+| ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Total opportunities                | All records in the filtered cohort, including conflicts and pre-submission states                                                                                                                                    |
+| Submitted applications             | Eligible submissions in that cohort                                                                                                                                                                                  |
+| Active applications                | Eligible records currently Applied, Recruiter Screen, Interview, Technical, or Final                                                                                                                                 |
+| Current interview pipeline         | Eligible records currently Recruiter Screen, Interview, Technical, or Final                                                                                                                                          |
+| Offers                             | Eligible records currently Offer                                                                                                                                                                                     |
+| Rejections                         | Eligible records currently Rejected; never inferred from silence                                                                                                                                                     |
+| Current status route               | All filtered opportunities by current status, including pre-submission states, conflicts, and Unknown; Rejected is shown separately. Station shares divide by all filtered opportunities, not submitted applications |
+| Country / role / source / priority | Eligible submissions; percentages divide by the filtered submitted count                                                                                                                                             |
+| Follow-ups                         | Eligible active applications with valid Follow-up Date: before today = overdue, today = due, after today = upcoming                                                                                                  |
 
 Weeks start Monday. Activity includes intervening zero days. Today and buckets clipped by display boundaries are marked partial. Cumulative totals start at the display window. In daily mode, the trailing seven-calendar-day average is available only after seven observed days; it retains earlier applied-date history outside the displayed applied-date window, with all other cohort filters preserved. There is no invented observation history before the earliest eligible application.
 
@@ -143,16 +147,18 @@ Weeks start Monday. Activity includes intervening zero days. Today and buckets c
 
 Only reviewed public categories in `worker/schemas.ts` may appear in live responses. Matching ignores surrounding whitespace and letter case. Unknown/missing values become **Unknown** rather than being echoed. V1 tiers are `1`, `2`, `3`, and Unknown. Review and extend the country/role/source/tier allowlists deliberately if your tracker uses different categories; do not automatically expose arbitrary sheet cells. Country coordinates are approximate country centers, not applicant locations.
 
-Private company/role text, Notes, City, Job URL, contacts, spreadsheet identifiers, and unreviewed records never enter the frontend. The Explorer has local controls independent of global live filters and contains only the synthetic JSON fixture. Never replace that file with real records without an explicit privacy review.
+`/api/dashboard` remains aggregate-only. `/api/explorer` publishes the approved fields Company, Role, Country, Source, Tier, Status, and Date Applied, plus a snapshot-local numeric row ID. Company and role are public text as explicitly approved; keep sensitive content out of those two source columns. Notes, City, Job URL, contacts, follow-up dates, spreadsheet identifiers, and all other columns stay private. Category values use reviewed taxonomies; missing or invalid dates remain null and are never interpreted as “not submitted.”
+
+Explorer controls remain independent of global aggregate filters. Both endpoints share the same 60-second Worker-memory source cache and return `Cache-Control: no-store`. Explorer loads independently, provides retry on errors, and never substitutes demo records when live access fails. Demo mode uses the same fictional CSV source as aggregate statistics, with the fixed reporting date 2026-10-15. No additional environment variables or Sheet columns are needed.
 
 Aggregates, especially small filtered groups, are **not a statistical anonymity guarantee**. Do not use this public dashboard for sensitive datasets requiring minimum-count suppression. Source row and raw error logging is intentionally absent. Keep `.dev.vars`, `.env`, PEM keys, raw CSV exports, build artifacts, and `data/private/` out of Git.
 
 ## Limits and verification
 
-- Current status is not a stage history. No historical conversion funnel, Sankey, response rate, or inferred rejection is calculated.
+- The route orders current statuses; connectors do not show observed transitions. Total tracked includes opportunities not yet submitted. Route nodes are read-only and do not filter the cohort or Explorer. Current status is not a stage history. No historical conversion funnel, Sankey, response rate, or inferred rejection is calculated.
 - Dates must be ISO `yyyy-mm-dd`, within 2000–2100. Invalid cells are surfaced, not silently repaired.
 - City detail, choropleth mode, and dark mode are optional scope and are not included in V1.
-- Mocked service-account tests verify JWT signatures, read-only scope, token exchange, and Sheets retrieval. Actual Google Sheets access must be checked with your own valid credentials; no real credentials are included or claimed verified.
+- Mocked service-account tests verify JWT signatures, read-only scope, token exchange, and Sheets retrieval. A locally configured live aggregate response was observed in the browser during the Atlas redesign. Credentials were not inspected, underlying private-row accuracy was not audited, and production deployment was not verified. Only synthetic fixtures are committed.
 - The project is not deployed automatically. Follow the manual deployment instructions above.
 
 Tests cover missing/invalid dates, inconsistent submission states, unknown labels, outcomes, duplicates, zero days, partial periods, Monday weeks, timezone boundaries, filtering, follow-ups, source parsing, API privacy, cache source isolation, and stale browser requests.
