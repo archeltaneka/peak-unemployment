@@ -11,7 +11,7 @@ it("publishes only approved fields with normalized categories and dates", async 
         Role: " Analyst ",
         Country: "Australia",
         Source: "PRIVATE",
-        Tier: "1",
+        Tier: "A",
         Status: "Applied",
         "Role Type": "Data Analyst",
         "Date Applied": "2026-10-01",
@@ -40,7 +40,7 @@ it("publishes only approved fields with normalized categories and dates", async 
     role: "Analyst",
     country: "Australia",
     source: "Unknown",
-    tier: "1",
+    tier: "A",
     status: "Applied",
     applied: "2026-10-01",
   });

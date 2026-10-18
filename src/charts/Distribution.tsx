@@ -23,13 +23,7 @@ export function Distribution({
             {
               type: "bar",
               orientation: "h",
-              y: groups.map((g) =>
-                g.label === "Unknown"
-                  ? g.label
-                  : title === "Priority mix"
-                    ? "Tier " + g.label
-                    : g.label,
-              ),
+              y: groups.map((g) => g.label),
               x: groups.map((g) => g.count),
               marker: { color },
               text: groups.map((g) => String(g.count)),

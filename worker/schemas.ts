@@ -25,7 +25,10 @@ export const taxonomies = {
     "Product Analyst",
     "Business Analyst",
     "Machine Learning Engineer",
+    "ML Engineer",
+    "AI Engineer",
     "Other",
+    "Not specified",
     "Unknown",
   ],
   source: [
@@ -39,7 +42,7 @@ export const taxonomies = {
     "Other",
     "Unknown",
   ],
-  tier: ["1", "2", "3", "Unknown"],
+  tier: ["A", "B", "C", "Unknown"],
   status: [...statuses],
 };
 export const activeStatuses: readonly Status[] = [
@@ -49,6 +52,12 @@ export const activeStatuses: readonly Status[] = [
   "Technical",
   "Final",
 ];
+export function normalizeTier(value: string | undefined): string {
+  return (
+    /^(?:tier\s+)?([abc])$/i.exec(value?.trim() ?? "")?.[1].toUpperCase() ??
+    "Unknown"
+  );
+}
 export function reviewed(
   value: string | undefined,
   choices: readonly string[],

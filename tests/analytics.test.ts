@@ -11,7 +11,7 @@ const row = (overrides: SourceRecord = {}): SourceRecord => ({
   Country: "Australia",
   "Role Type": "Data Analyst",
   Source: "LinkedIn",
-  Tier: "1",
+  Tier: "A",
   "Date Found": "2026-10-01",
   "Date Applied": "2026-10-02",
   ...overrides,
@@ -78,11 +78,31 @@ describe("eligibility and quality", () => {
   });
 });
 describe("filters and distribution", () => {
+  it("preserves original AI and ML role categories in distributions and filters", () => {
+    const rows = [row({ "Role Type": "AI Engineer" }), row({ "Role Type": "ML Engineer" })];
+    const d = run(rows);
+    expect(d.roles).toEqual(expect.arrayContaining([
+      { label: "AI Engineer", count: 1 },
+      { label: "ML Engineer", count: 1 },
+    ]));
+    expect(d.options.roleType).toEqual(expect.arrayContaining(["AI Engineer", "ML Engineer"]));
+    expect(run(rows, "roleType=ML+Engineer").kpis.submitted).toBe(1);
+  });
+  it("distinguishes blank role types from unreviewed labels without inventing a role", () => {
+    const rows = [row({ "Role Type": "  " }), row({ "Role Type": "private@example.com" })];
+    const d = run(rows);
+    expect(d.roles).toContainEqual({ label: "Not specified", count: 1 });
+    expect(d.roles).toContainEqual({ label: "Unknown", count: 1 });
+    expect(d.quality.issues).toContainEqual({ label: "Missing Role Type", count: 1 });
+    expect(run(rows, "roleType=Not+specified").kpis.submitted).toBe(1);
+    expect(JSON.stringify(d)).not.toContain("private@example.com");
+  });
+
   it.each([
     "country=Australia",
     "roleType=Data+Analyst",
     "source=LinkedIn",
-    "tier=1",
+    "tier=A",
     "status=Applied",
   ])("uses filter %s", (query) => {
     expect(
@@ -93,7 +113,7 @@ describe("filters and distribution", () => {
             Country: "Canada",
             "Role Type": "Data Scientist",
             Source: "Indeed",
-            Tier: "2",
+            Tier: "B",
             Status: "Interview",
           }),
         ],

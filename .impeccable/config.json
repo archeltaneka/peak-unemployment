@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "src/charts/HiringGauntlet.css"
+        ],
+        "createdAt": "2026-10-18T09:49:47.085Z",
+        "reason": "Agent reviewed: the border on .gauntlet-path-active::before draws the user-requested mobile route connector between checkpoint centers; it is not a card accent."
+      }
+    ]
+  }
+}

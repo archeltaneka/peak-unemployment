@@ -6,7 +6,9 @@ A public job application analytics dashboard and Product Analytics / Data Scienc
 
 The Atlas interface combines a paper canvas, navy ink, cobalt selection, locally bundled DM Serif Display and Manrope, and an editorial index. A fixed desktop index becomes top navigation on smaller screens. Compact global filters lead into the current-status route; activity and submission metrics share a spread, followed by ruled charts and a fictional application ledger. See [DESIGN.md](DESIGN.md) for the visual system.
 
-The interactive route maps **current status** from Total tracked through Discovered, Preparing, Applied, Recruiter Screen, Interview, Technical, Final, and Offer, with Rejected on a separate branch. Large static circles show counts and cohort shares directly. The path toward Offer is green, Rejected is red, and Unknown is neutral. Offer does not imply acceptance. Brief ring pulses and connector reveals finish within four seconds and are disabled for reduced motion. At 650px and below the route becomes vertical. Dates, source, and tier are available in the filter disclosure. Explorer controls remain independent of aggregate filters; its wide table supports local keyboard scrolling.
+The Hiring Gauntlet presents **current status** as an illustrated board: Discovered, Preparing, Applied, Recruiter Screen, Interview, Technical, Final, and Offer. Authored inline SVG checkpoints follow a four-by-two serpentine route on desktop and a compact vertical list at 650px and below. Rejected is a separate terminal outcome that can occur after any submitted stage; Unknown appears separately when present or unavailable. Counts and shares use all filtered opportunities, including Rejected, Unknown, and submission conflicts. Offer does not imply acceptance.
+
+Each checkpoint displays its tagline, count, and cohort share directly, without buttons, tooltips or a detail panel. Hover gently lifts the artwork. A brief route reveal ends at the furthest populated current status in the filtered view and updates when that endpoint changes; Rejected and Unknown never extend the highlight. It indicates typical ordering, not observed recruitment transitions. After the reveal, the highlighted path gently pulses twice, then continues a subtle six-second idle pulse. Reduced motion shows a static highlight. Dates, source, and tier are available in the filter disclosure. Explorer controls remain independent of aggregate filters; its wide table supports local keyboard scrolling.
 
 ## Stack and architecture
 
@@ -43,7 +45,7 @@ bun run check      # all three checks above
 bun run preview    # build and run the built Worker locally
 ```
 
-The initial frontend is separate from the lazy-loaded chart library. The Plotly bundle registers only bar, scatter, and scattergeo traces (~464 kB gzip in the verified build). Fonts and map topology are self-hosted; charts do not request a third-party CDN at runtime.
+The initial frontend is separate from the lazy-loaded chart library. The Plotly bundle registers only bar, scatter, scattergeo, and pie traces. Fonts and map topology are self-hosted; charts do not request a third-party CDN at runtime.
 
 ## Google Sheets setup
 
@@ -143,9 +145,11 @@ Weeks start Monday. Activity includes intervening zero days. Today and buckets c
 
 `Days Since Applied` and `Follow-up Flag` are ignored. Possible duplicates are flagged using Company + Role + Date Applied + Date Found (trimmed, case-insensitive), but never removed. This heuristic does not establish identity.
 
+Application Priority Breakdown is a donut chart of eligible submissions after all global filters, with fixed tier colors and an accessible count/share table. Its denominator is submitted applications, not all source rows; a historical CSV snapshot need not match current live counts.
+
 ## Taxonomies and privacy
 
-Only reviewed public categories in `worker/schemas.ts` may appear in live responses. Matching ignores surrounding whitespace and letter case. Unknown/missing values become **Unknown** rather than being echoed. V1 tiers are `1`, `2`, `3`, and Unknown. Review and extend the country/role/source/tier allowlists deliberately if your tracker uses different categories; do not automatically expose arbitrary sheet cells. Country coordinates are approximate country centers, not applicant locations.
+Only reviewed public categories in `worker/schemas.ts` may appear in live responses. Matching ignores surrounding whitespace and letter case. Unknown/missing values become **Unknown** rather than being echoed. Priority tiers are `A`, `B`, `C`, and Unknown. `Tier A`, `Tier B`, and `Tier C` are accepted case-insensitively, with surrounding or repeated whitespace ignored. Missing and unrecognized values (including legacy numeric values) remain Unknown. Source headers are matched case-insensitively after trimming and collapsing whitespace; duplicate normalized headers are rejected. Synthetic demo tiers use the same A/B/C contract. Review and extend the country/role/source/tier allowlists deliberately if your tracker uses different categories; do not automatically expose arbitrary sheet cells. Country coordinates are approximate country centers, not applicant locations.
 
 `/api/dashboard` remains aggregate-only. `/api/explorer` publishes the approved fields Company, Role, Country, Source, Tier, Status, and Date Applied, plus a snapshot-local numeric row ID. Company and role are public text as explicitly approved; keep sensitive content out of those two source columns. Notes, City, Job URL, contacts, follow-up dates, spreadsheet identifiers, and all other columns stay private. Category values use reviewed taxonomies; missing or invalid dates remain null and are never interpreted as “not submitted.”
 
@@ -155,10 +159,12 @@ Aggregates, especially small filtered groups, are **not a statistical anonymity 
 
 ## Limits and verification
 
-- The route orders current statuses; connectors do not show observed transitions. Total tracked includes opportunities not yet submitted. Route nodes are read-only and do not filter the cohort or Explorer. Current status is not a stage history. No historical conversion funnel, Sankey, response rate, or inferred rejection is calculated.
+- The Hiring Gauntlet orders current statuses; connectors do not show observed transitions. The filtered total includes opportunities not yet submitted. Checkpoints are read-only and do not filter the cohort or Explorer. Current status is not a stage history. No historical conversion funnel, Sankey, response rate, or inferred rejection is calculated.
 - Dates must be ISO `yyyy-mm-dd`, within 2000–2100. Invalid cells are surfaced, not silently repaired.
 - City detail, choropleth mode, and dark mode are optional scope and are not included in V1.
 - Mocked service-account tests verify JWT signatures, read-only scope, token exchange, and Sheets retrieval. A locally configured live aggregate response was observed in the browser during the Atlas redesign. Credentials were not inspected, underlying private-row accuracy was not audited, and production deployment was not verified. Only synthetic fixtures are committed.
 - The project is not deployed automatically. Follow the manual deployment instructions above.
 
 Tests cover missing/invalid dates, inconsistent submission states, unknown labels, outcomes, duplicates, zero days, partial periods, Monday weeks, timezone boundaries, filtering, follow-ups, source parsing, API privacy, cache source isolation, and stale browser requests.
+
+Role distribution preserves the reviewed sheet labels `AI Engineer` and `ML Engineer` (separately from `Machine Learning Engineer`). Blank Role Type cells appear as `Not specified` and are flagged as missing; unreviewed nonempty categories still map to `Unknown`. New role categories must be added to `worker/schemas.ts` before publication.

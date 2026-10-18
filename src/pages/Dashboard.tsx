@@ -1,3 +1,4 @@
+import { PriorityBreakdown } from "../charts/PriorityBreakdown";
 import { useState } from "react";
 import { useDashboard } from "../hooks/useDashboard";
 import type { DashboardFilters } from "../types/dashboard";
@@ -89,7 +90,7 @@ export default function Dashboard() {
             : error
               ? "Dashboard could not be refreshed."
               : data
-                ? `${data.kpis.opportunities} opportunities in this view.`
+                ? ``
                 : ""}
         </div>
         {error && (
@@ -169,12 +170,9 @@ export default function Dashboard() {
                 total={data.kpis.submitted}
                 color="#59799a"
               />
-              <Distribution
-                title="Priority mix"
-                description="A little intention behind the effort · submissions"
+              <PriorityBreakdown
                 groups={data.tiers}
                 total={data.kpis.submitted}
-                color="#9a7852"
               />
             </div>
             <Panel

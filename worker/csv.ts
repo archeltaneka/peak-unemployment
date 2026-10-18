@@ -23,9 +23,13 @@ export function recordsFromValues(values: unknown): SourceRecord[] {
     values.length > 10001
   )
     throw new Error("Invalid source");
-  const names = values[0].map((v: unknown) =>
-    typeof v === "string" ? v.trim() : "",
-  );
+  const names = values[0].map((v: unknown) => {
+    const name = typeof v === "string" ? v.trim().replace(/\s+/g, " ") : "";
+    return (
+      headers.find((header) => header.toLowerCase() === name.toLowerCase()) ??
+      name
+    );
+  });
   if (
     new Set(names).size !== names.length ||
     headers.some((h) => !names.includes(h))

@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { journeyStations, cohortShare } from "../src/lib/journey";
+import {
+  journeyStations,
+  cohortShare,
+  furthestJourneyStage,
+} from "../src/lib/journey";
 
 describe("current-status journey", () => {
   it("orders current counts without cumulating later stages or rejected outcomes", () => {
@@ -31,5 +35,59 @@ describe("current-status journey", () => {
     expect(cohortShare(0, 0)).toBeNull();
     expect(cohortShare(0, 10)).toBe(0);
     expect(cohortShare(3, 12)).toBe(25);
+  });
+});
+
+describe("furthest populated current stage", () => {
+  it.each([
+    "Discovered",
+    "Preparing",
+    "Applied",
+    "Recruiter Screen",
+    "Interview",
+    "Technical",
+    "Final",
+    "Offer",
+  ])(
+    "ends at %s, ignoring later zero counts and separate outcomes",
+    (label) => {
+      const labels = [
+        "Discovered",
+        "Preparing",
+        "Applied",
+        "Recruiter Screen",
+        "Interview",
+        "Technical",
+        "Final",
+        "Offer",
+      ];
+      const groups = labels.map((name) => ({
+        label: name,
+        count: name === label ? 1 : 0,
+      }));
+      groups.push(
+        { label: "Rejected", count: 20 },
+        { label: "Unknown", count: 5 },
+      );
+      expect(furthestJourneyStage(groups)).toBe(labels.indexOf(label));
+    },
+  );
+  it("does not infer a route from empty, missing or terminal-only counts", () => {
+    expect(furthestJourneyStage([])).toBe(-1);
+    expect(furthestJourneyStage([{ label: "Offer", count: 0 }])).toBe(-1);
+    expect(
+      furthestJourneyStage([
+        { label: "Rejected", count: 10 },
+        { label: "Unknown", count: 3 },
+      ]),
+    ).toBe(-1);
+  });
+  it("uses the furthest populated stage even with gaps", () => {
+    expect(
+      furthestJourneyStage([
+        { label: "Applied", count: 9 },
+        { label: "Final", count: 1 },
+      ]),
+    ).toBe(6);
   });
 });

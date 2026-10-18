@@ -8,14 +8,13 @@ colors:
   surface: "#f5f1e8"
   border: "#cbd0d5"
   ledger: "#eeece5"
-  route-neutral: "#e0e2e8"
-  route-line: "#aab9cf"
-  route-green: "#246348"
-  route-green-surface: "#e0ebe1"
-  route-green-line: "#83a98d"
-  route-red: "#963f38"
-  route-red-surface: "#f2dfda"
-  route-red-line: "#b96359"
+  gauntlet-paper: "#fff9eb"
+  gauntlet-green: "#285840"
+  gauntlet-amber: "#e7bd69"
+  gauntlet-red: "#873f39"
+  gauntlet-red-paper: "#f1dfd6"
+  gauntlet-selected: "#e2ebd7"
+  gauntlet-track: "#bfd0b2"
   hover-surface: "#e5e9ef"
   demo-surface: "#e0e7f3"
   demo-ink: "#294d9d"
@@ -93,7 +92,7 @@ components:
 
 **Creative North Star: “Atlas”**
 
-An editorial atlas of a personal job search: paper, navy ink, serif headlines, large circular route markers, green offer-path and red rejected-path accents. The approved direction is `.impeccable/mocks/decision/atlas.webp`. The identity applies across the dashboard, from its fixed index to its ruled chart spreads and application ledger.
+An editorial atlas of a personal job search: paper, navy ink, serif headlines, illustrated Hiring Gauntlet checkpoints, a forest-green route and a separate muted-red rejection area. The approved direction is `.impeccable/mocks/decision/atlas.webp`. The identity applies across the dashboard, from its fixed index to its ruled chart spreads and application ledger.
 
 The voice stays professional and lightly playful. Strong headline and number hierarchy introduces the story; explicit definitions, provenance, and chart alternatives support scrutiny.
 
@@ -101,14 +100,14 @@ Key characteristics:
 
 - Paper canvas with flat, ruled analytical sections.
 - DM Serif Display headlines and numbers, Manrope controls and evidence.
-- A current-status route with enlarged count circles and inline cohort shares.
+- A current-status board with authored SVG illustrations, inline counts and cohort shares, and always-visible taglines.
 - Compact global controls and an independently filtered application ledger.
 
 ## Colors
 
-Cobalt is the control accent; navy supplies text and the Total tracked circle. The route toward Offer uses green; Rejected uses red and Unknown stays neutral. Labels accompany every color. Muted blue-gray supports labels, while warm paper and ledger surfaces keep long analytical sections cohesive. The normative values are in the frontmatter and `src/styles.css`.
+Cobalt is the dashboard control accent; navy supplies text. The Hiring Gauntlet adds a scoped cream board, forest-green route, amber illustration accents, and muted-red rejection area. Labels accompany every color. Muted blue-gray supports labels, while warm paper and ledger surfaces keep long analytical sections cohesive. The normative values are in the frontmatter, `src/styles.css`, and `src/charts/HiringGauntlet.css`.
 
-Route circles are neutral until selected, when they become cobalt with white numbers. This selection color does not encode recruitment status. Status dots in the Explorer retain the reviewed mapping in `src/lib/presentation.ts`. Live and demo badges have distinct labeled treatments; color never replaces their text.
+Checkpoint hover uses pale green and a gentle artwork lift; checkpoints have no click action. Empty checkpoints use subdued neutral artwork while retaining readable counts. The rejection area retains its red treatment, and Unknown stays outside the numbered route. Status dots in the Explorer retain the reviewed mapping in `src/lib/presentation.ts`. Live and demo badges have distinct labeled treatments; color never replaces their text.
 
 ## Typography
 
@@ -116,23 +115,25 @@ DM Serif Display and Manrope Variable are bundled locally through Fontsource. Ge
 
 The desktop masthead uses the display token above; at 1250px it becomes `clamp(64px, 7.5vw, 100px)`, at 950px `clamp(56px, 10.7vw, 100px)`, and at 650px `clamp(38px, 10.4vw, 68px)` with 0.94 line height. Section headings generally range from 27px to 36px. The desktop tagline scales from 20px to 28px, becoming 20px on phones.
 
+The Hiring Gauntlet retains these font families: its heading is `clamp(32px, 3.4vw, 48px)`, checkpoint names are 13px/1.3 at weight 750, counts are 30px/1.1 serif, and shares are 10px/1.4. On phones checkpoint names become 12px and counts 27px. The filtered total is 44px serif (32px on phones); stage taglines are 11px/1.5.
+
 ## Layout
 
 Above 1250px, a fixed 240px left index anchors the page; the main area offsets by the same width and uses 40px horizontal padding. At 1250px, the index narrows to 190px and main padding to 28px. At 950px and below, the index becomes a normal-flow top header with horizontally scrollable navigation and 24px page padding. At 650px and below, page padding is 18px. Above 1800px, main padding grows to 60px.
 
-The opening sequence is masthead and provenance, compact filters, then the enlarged route with inline counts and shares. Submission activity shares a ruled spread with a metrics sidebar. Geography pairs its map with a country table; distributions use three columns, two below 1250px, and one below 650px. Follow-ups, the Explorer ledger, and methodology complete the page.
+The opening sequence is masthead and provenance, compact filters, then the Hiring Gauntlet with inline counts and shares. Submission activity shares a ruled spread with a metrics sidebar. Geography pairs its map with a country table; distributions use three columns, two below 1250px, and one below 650px. Follow-ups, the Explorer ledger, and methodology complete the page.
 
-The nine main route stations run horizontally above 650px and vertically below. Rejected branches separately; Unknown is separate when present or its count is unavailable. There is no station selection or detail panel. Activity, geography, follow-ups, and methodology become single-column sections at 650px. Tables preserve their columns with local horizontal scrolling.
+Above 650px, the eight numbered checkpoints form a four-column, two-row board with 260px rows: the top reads left to right and the bottom returns right to left. The total sits above the board; Rejected occupies a separate strip below the route, followed by Unknown when present or unavailable. At 650px and below, checkpoints form a compact vertical list with artwork, labels and shares, and right-aligned counts. Board padding changes from 24px to 18px 14px with no bottom padding. Activity, geography, follow-ups, and methodology become single-column sections at 650px. Tables preserve their columns with local horizontal scrolling.
 
 ## Elevation & Depth
 
-Use paper tones, rules, and count circles to establish hierarchy. Analytical panels remain flat. Definition popovers alone use `0 5px 16px #172d4d20`, with navy backgrounds and light text. Avoid adding general card shadows.
+Use paper tones, rules, and illustrated checkpoints to establish hierarchy. Analytical panels remain flat. Definition popovers use `0 5px 16px #172d4d20`, with navy backgrounds and light text. Avoid adding general card shadows.
 
-Motion is bounded: a 750ms connector reveal and two 1800ms ring pulses around stationary nodes, with at most 360ms delay. Everything finishes within four seconds; there is no infinite loop or implied record movement. Reduced-motion preferences keep the route completely still.
+Hiring Gauntlet entrance motion is bounded: one 420ms board entrance moves upward 5px while fading from 0.8 opacity. Hover lifts artwork 3px and rotates it −2 degrees with a 180ms transition. There are no ring pulses or moving records. The route reveals one segment every 220ms, stopping at the furthest populated numbered stage in the filtered cohort (maximum 1540ms). Rejected and Unknown do not extend it. After the reveal, all highlighted segments pulse together twice over 2400ms, easing opacity between 1 and 0.45. The initial sequence finishes within 3940ms, then a six-second idle cycle softly eases highlighted-path opacity between 1 and 0.72. The idle loop stays in place and never extends beyond the filtered endpoint. Reduced motion disables animation and transitions while retaining the static route highlight.
 
 ## Shapes
 
-Controls have 4px corners; segmented interiors have 2px corners. Main and branch circles are 96px on wide screens, 72px on compact desktops, 76px at top-navigation widths, 64px from 651–800px, and 76px on phones. Badges use pill shapes. Section boundaries are thin rules, not raised card frames.
+Controls have 4px corners; segmented interiors have 2px corners. Checkpoint illustrations sit in 104×91px outlined medallions with `50% 50% 45% 45%` corners, shrinking to 78×72px on phones. Number badges are 23px circles. The cream board has square corners. Badges use pill shapes. Section boundaries are thin rules, not raised card frames.
 
 ## Components
 
@@ -144,9 +145,11 @@ Buttons use transparent fills, a blue-gray border, and navy text. Hover introduc
 
 Date basis, country, role type, current status, and reset stay visible. A native disclosure contains From, To, Source, and Tier, and indicates when these contain active values. All aggregate panels share these filters; activity continues to plot submission dates. On mobile, fields form two columns and reset receives its own row.
 
-### Current-status route
+### Hiring Gauntlet
 
-Stations are static labeled counts with cohort shares directly beneath them. They have no button semantics, selection state, detail panel, or scroll action. The green path ends at Offer, which does not imply acceptance. Rejected branches from Total tracked in red and remains a separate terminal outcome. Unknown is neutral. No connector or animation claims historical movement or conversion.
+Eight numbered read-only checkpoints pair authored inline SVG objects with professional labels, visible taglines, current counts, and cohort shares. Illustrations are decorative; labels and values remain HTML. No raster assets, tooltips, buttons or detail panels are used. Hover retains the artwork lift and rotation. The route highlight is clipped to the furthest populated current stage in the filtered view, with a sequential reveal on desktop and mobile. It restarts only when the endpoint changes. A Discovered-only or empty cohort has no highlighted connecting segments. All values refresh with global filters.
+
+The denominator is all filtered opportunities, including Rejected, Unknown, and submission conflicts. Zero-count checkpoints remain visible; unavailable counts and shares are explicitly labeled. The green route ends at Offer, which does not imply acceptance. Rejected is a separate terminal outcome that can occur after any submitted stage; the source does not identify that stage. Unknown remains outside the route. Connectors illustrate typical order only, never historical movement or conversion.
 
 ### Charts and metrics
 

@@ -2,6 +2,7 @@ import { statuses, type Status } from "../src/types/dashboard";
 import { parseDate } from "./dates";
 import {
   reviewed,
+  normalizeTier,
   taxonomies,
   type NormalizedRecord,
   type SourceRecord,
@@ -39,12 +40,15 @@ export function normalizeRecords(
     if ((frequencies.get(keys[i]) ?? 0) > 1) issues.push("Possible duplicate");
     const dimensions = {
       country: reviewed(r.Country, taxonomies.country),
-      roleType: reviewed(r["Role Type"], taxonomies.roleType),
+      roleType: r["Role Type"]?.trim()
+        ? reviewed(r["Role Type"], taxonomies.roleType)
+        : "Not specified",
       source: reviewed(r.Source, taxonomies.source),
-      tier: reviewed(r.Tier, taxonomies.tier),
+      tier: normalizeTier(r.Tier),
     };
     if (Object.values(dimensions).includes("Unknown"))
       issues.push("Unknown category");
+    if (!r["Role Type"]?.trim()) issues.push("Missing Role Type");
     return {
       ...dimensions,
       status,
