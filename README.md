@@ -4,6 +4,8 @@
 
 A public job application analytics dashboard and Product Analytics / Data Science portfolio project. Google Sheets stays private; the browser receives aggregates and the approved fields shown in the Live Application Explorer. Explorer reads company, role, country, source, tier, current status and application date through the Worker. Demo mode uses fictional records.
 
+Public site: [peak-unemployment.archeltaneka.workers.dev](https://peak-unemployment.archeltaneka.workers.dev).
+
 The Atlas interface retains its paper canvas, navy ink, cobalt selection, locally bundled DM Serif Display and Manrope, and editorial index. Explicit live/demo provenance and a cohort summary introduce the overview metrics, followed by the illustrated current-status board, activity, breakdowns, and the application ledger. See [DESIGN.md](DESIGN.md) for the visual system.
 
 The status board presents **current status**, with each record counted once. Its four-by-two serpentine route illustrates typical order only: no path is highlighted from the data, and no movement or conversion is inferred. Rejected remains a separate terminal outcome; Unknown appears separately when present or unavailable. Counts and shares use all filtered opportunities, including submission conflicts. Offer does not imply acceptance.
@@ -105,13 +107,42 @@ bun run check
 bun run deploy
 ```
 
-Supply each value when prompted. For `GOOGLE_PRIVATE_KEY`, paste the PEM key or securely pipe the PEM file into that command. Keep files containing credentials outside this repository. Rotate/revoke service-account keys when no longer needed.
+Run each `secret put` command separately. The argument after `put` is the secret's name; enter its actual value at the interactive prompt, rather than appending it to the command.
+
+| Secret | Value to enter |
+| --- | --- |
+| `GOOGLE_SERVICE_ACCOUNT_EMAIL` | The service-account JSON key's `client_email` value. |
+| `GOOGLE_PRIVATE_KEY` | Only the `private_key` value, including `-----BEGIN PRIVATE KEY-----` and `-----END PRIVATE KEY-----`. Real newlines or literal `\n` are accepted. |
+| `GOOGLE_SHEET_ID` | Only the spreadsheet ID between `/d/` and `/edit` in its URL. |
+| `GOOGLE_SHEET_RANGE` | The actual tab name and bounded range, such as `Applications!A1:O10001`. Tab names with spaces use A1 notation such as `'Job Applications'!A1:O10001`. |
+
+Do not include the JSON field labels, the entire JSON key file, or surrounding double quotes in prompted values. The surrounding double quotes in the `.dev.vars` example are file syntax, not part of the secret. For the private key, you can also securely pipe a PEM file into the command. Keep files containing credentials outside this repository. Rotate/revoke service-account keys when no longer needed.
+
+To edit secrets through the Cloudflare dashboard, open **Workers & Pages → peak-unemployment → Settings → Variables and Secrets**. After updating values, choose **Deploy** to activate them. **Save version** alone does not activate the saved version; deploy that version separately. See [Cloudflare's secrets documentation](https://developers.cloudflare.com/workers/configuration/secrets/).
 
 If Wrangler needs the Worker to exist before uploading secrets, create it in the Cloudflare dashboard first, or deploy once before adding secrets. An unconfigured live deployment returns 503 for both `/api/dashboard` and `/api/explorer`; neither endpoint substitutes demo data.
 
 `REPORTING_TIMEZONE` is a non-secret Wrangler variable; set it to your reporting IANA timezone. To deliberately publish a **demo-only** version, change `DATA_MODE` to `demo` in `wrangler.jsonc`, then deploy. The public UI will label it synthetic. Return that setting to `live` for live data.
 
 Static assets and the API share one origin. `/api` and `/api/*` always run the Worker first, including browser navigation; unknown API routes return JSON 404 instead of the SPA. See the [Cloudflare React SPA + API guide](https://developers.cloudflare.com/workers/vite-plugin/tutorial/).
+
+### Verify and troubleshoot deployment
+
+After deployment, open the public URL printed by Wrangler. Confirm the live/demo label, dashboard metrics, Explorer, charts, and filters load. Check `/api/dashboard` and `/api/explorer` return HTTP 200 with the intended mode. `/api/health` only confirms Worker liveness; it does not validate credentials or spreadsheet access.
+
+If the site loads but the dashboard API returns **503**, check:
+
+1. The updated secrets belong to this Worker and their version has been deployed. A listed secret name does not confirm that its value is valid.
+2. The private key has both PEM markers and no surrounding double quotes, and belongs to the configured service account.
+3. The Google Sheets API is enabled in the service account's Google Cloud project, and the spreadsheet is shared with that exact service-account email as Viewer.
+4. The spreadsheet ID and tab/range are correct. The range starts at the header row and includes all 15 required columns listed above, even if their data cells are empty.
+5. `DATA_MODE` is exactly `live` or `demo`, and `REPORTING_TIMEZONE` is a valid IANA timezone, such as `Australia/Melbourne`.
+
+The public API deliberately returns a generic unavailable message without exposing Google errors or private source data.
+
+If a newly deployed `workers.dev` hostname reports **ERR_SSL_VERSION_OR_CIPHER_MISMATCH**, confirm its route is enabled under **Settings → Domains & Routes**. Certificate activation can be delayed; retry after a short wait. A TLS handshake failure occurs before the Worker handles a request, so changing Google secrets cannot resolve it. See [Cloudflare's TLS troubleshooting guidance](https://developers.cloudflare.com/ssl/troubleshooting/version-cipher-mismatch/).
+
+For later code changes, run `bun run check` followed by `bun run deploy`. Spreadsheet edits do not require deployment; successful source reads are cached for 60 seconds in Worker memory.
 
 ## API and caching
 
@@ -172,7 +203,7 @@ Aggregates, especially small filtered groups, are **not a statistical anonymity 
 - The Hiring Gauntlet orders current statuses; connectors do not show observed transitions. The filtered total includes opportunities not yet submitted. Checkpoints are read-only and do not filter the cohort or Explorer. Current status is not a stage history. No historical conversion funnel, Sankey, response rate, or inferred rejection is calculated.
 - Dates must be ISO `yyyy-mm-dd`, within 2000–2100. Invalid cells are surfaced, not silently repaired.
 - City detail, choropleth mode, and dark mode are optional scope and are not included in V1.
-- Mocked service-account tests verify JWT signatures, read-only scope, token exchange, and Sheets retrieval. A locally configured live aggregate response was observed in the browser during the Atlas redesign. Credentials were not inspected, underlying private-row accuracy was not audited, and production deployment was not verified. Only synthetic fixtures are committed.
+- Mocked service-account tests verify JWT signatures, read-only scope, token exchange, and Sheets retrieval. These checks do not establish production credential validity or underlying private-row accuracy. Verify the deployed APIs using the steps above. Only synthetic fixtures are committed.
 - The project is not deployed automatically. Follow the manual deployment instructions above.
 
 Tests cover missing/invalid dates, inconsistent submission states, unknown labels, outcomes, duplicates, zero days, partial periods, Monday weeks, timezone boundaries, filtering, follow-ups, source parsing, API privacy, cache source isolation, and stale browser requests.
