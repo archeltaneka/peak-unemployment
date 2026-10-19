@@ -1,0 +1,201 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-16T07:49:12.597159+00:00",
+  "title": "Design System: Peak Unemployment",
+  "extensions": {
+    "colorMeta": {
+      "accent": {
+        "role": "primary",
+        "displayName": "Cobalt"
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Navy ink"
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Atlas paper"
+      },
+      "ledger": {
+        "role": "neutral",
+        "displayName": "Ledger paper"
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Muted blue-gray"
+      },
+      "gauntlet-paper": {
+        "role": "neutral",
+        "displayName": "Gauntlet cream"
+      },
+      "gauntlet-green": {
+        "role": "secondary",
+        "displayName": "Forest green"
+      },
+      "gauntlet-amber": {
+        "role": "secondary",
+        "displayName": "Paperwork amber"
+      },
+      "gauntlet-red": {
+        "role": "secondary",
+        "displayName": "Muted rejection red"
+      },
+      "gauntlet-red-paper": {
+        "role": "neutral",
+        "displayName": "Rejection paper"
+      },
+      "gauntlet-selected": {
+        "role": "secondary",
+        "displayName": "Selected checkpoint"
+      },
+      "gauntlet-track": {
+        "role": "secondary",
+        "displayName": "Route underlay"
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Editorial masthead",
+        "purpose": "Large serif product title."
+      },
+      "headline": {
+        "displayName": "Section headline",
+        "purpose": "Serif analytical section headings."
+      },
+      "metric": {
+        "displayName": "Metric",
+        "purpose": "Prominent counts and cohort shares."
+      },
+      "navigation": {
+        "displayName": "Desktop index",
+        "purpose": "Georgia section anchors; mobile uses Manrope."
+      }
+    },
+    "shadows": [
+      {
+        "name": "definition",
+        "value": "0 5px 16px #172d4d20",
+        "purpose": "Definition popovers."
+      }
+    ],
+    "motion": [
+      {
+        "name": "control",
+        "value": "160ms ease-out",
+        "purpose": "Button color and background."
+      },
+      {
+        "name": "gauntlet-entrance",
+        "value": "420ms cubic-bezier(0.16,1,0.3,1)",
+        "purpose": "Single board reveal: opacity 0.8 to 1 and translateY(5px) to 0. Disabled for reduced motion."
+      },
+      {
+        "name": "gauntlet-hover",
+        "value": "180ms cubic-bezier(0.16,1,0.3,1); background-color 180ms ease-out",
+        "purpose": "Artwork lifts 3px and rotates −2 degrees on hover. Disabled for reduced motion."
+      },
+      {
+        "name": "gauntlet-path",
+        "value": "220ms linear per segment, two 1200ms ease-in-out pulses, then a repeating 6s ease-in-out idle pulse",
+        "purpose": "Reveals to the furthest populated current status, pulses twice, then gently cycles opacity from 1 to 0.72 in place. Excludes Rejected and Unknown. Restarts when endpoint changes; static for reduced motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "wide",
+        "value": "1800px"
+      },
+      {
+        "name": "compact-desktop",
+        "value": "1250px"
+      },
+      {
+        "name": "top-navigation",
+        "value": "950px"
+      },
+      {
+        "name": "mobile",
+        "value": "650px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Button",
+      "kind": "button",
+      "description": "Quiet bordered action with explicit keyboard focus.",
+      "html": "<button class=\"ds-button\">Next</button>",
+      "css": ".ds-button{font:12px \"Manrope Variable\",sans-serif;border:1px solid var(--border,#cbd0d5);border-radius:4px;background:transparent;color:var(--ink,#172d4d);padding:9px 13px;cursor:pointer;transition:background-color 160ms ease-out,color 160ms ease-out}.ds-button:hover{background:#e5e9ef;color:var(--accent,#325ec4)}.ds-button:focus-visible{outline:2px solid var(--accent,#325ec4);outline-offset:4px}",
+      "refersTo": "button"
+    },
+    {
+      "name": "Text action",
+      "kind": "button",
+      "description": "Underlined reset action.",
+      "html": "<button class=\"ds-text\">Reset filters</button>",
+      "css": ".ds-text{font:11px \"Manrope Variable\",sans-serif;color:var(--accent,#325ec4);border:0;background:transparent;padding:3px 0;text-decoration:underline;text-underline-offset:4px;cursor:pointer}.ds-text:hover{background:#e5e9ef}.ds-text:focus-visible{outline:2px solid var(--accent,#325ec4);outline-offset:4px}"
+    },
+    {
+      "name": "Search field",
+      "kind": "input",
+      "description": "Compact transparent field with a visible label.",
+      "html": "<label class=\"ds-label\">Search demo records<input class=\"ds-input\" type=\"search\" placeholder=\"Company or role…\"></label>",
+      "css": ".ds-label{display:flex;flex-direction:column;gap:7px;font:650 11px \"Manrope Variable\",sans-serif;color:var(--muted,#52627b)}.ds-input{font:12px \"Manrope Variable\",sans-serif;height:38px;padding:0 9px;border:1px solid var(--border,#cbd0d5);border-radius:4px;background:transparent;color:var(--ink,#172d4d)}.ds-input:focus-visible{outline:2px solid var(--accent,#325ec4);outline-offset:4px}",
+      "refersTo": "input"
+    },
+    {
+      "name": "Index",
+      "kind": "nav",
+      "description": "Serif desktop section index.",
+      "html": "<nav class=\"ds-index\"><a href=\"#overview\">Overview</a><a href=\"#journey\">The journey</a><a href=\"#activity\">Activity</a></nav>",
+      "css": ".ds-index{display:flex;flex-direction:column;gap:2px;background:var(--surface,#f5f1e8);padding:20px}.ds-index a{font:20px Georgia,serif;padding:10px 0 10px 18px;border-left:1px solid transparent;text-decoration:none;color:var(--ink,#172d4d)}.ds-index a:hover{border-left-color:var(--accent,#325ec4);color:var(--accent,#325ec4)}.ds-index a:focus-visible{outline:2px solid var(--accent,#325ec4);outline-offset:4px}"
+    },
+    {
+      "name": "Demo provenance",
+      "kind": "chip",
+      "description": "Explicit synthetic-data badge.",
+      "html": "<span class=\"ds-demo\">Demo records only</span>",
+      "css": ".ds-demo{display:inline-flex;align-items:center;border-radius:20px;padding:5px 10px;font:650 11px \"Manrope Variable\",sans-serif;background:#e0e7f3;color:#294d9d;white-space:nowrap}",
+      "refersTo": "demo-badge"
+    },
+    {
+      "name": "Hiring Gauntlet checkpoint",
+      "kind": "stat",
+      "description": "Read-only current status, visible tagline, count and filtered cohort share. Hover lifts artwork; route highlights only up to the furthest populated numbered stage. No click action or tooltip.",
+      "html": "<div role=\"group\" class=\"ds-checkpoint\" aria-label=\"Applied: 12 current records, 25% of filtered opportunities.\"><span class=\"ds-art\"><svg viewBox=\"0 0 80 64\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M14 24h50v33H14z\" fill=\"#fff9eb\"/><path d=\"m14 24 25 20 25-20M14 57l17-20m33 20L47 37\"/><path d=\"m37 7 34 1-15 20-4-12z\" fill=\"#e7bd69\"/><path d=\"m52 16 19-8M20 8l6 4M10 16h9\"/></svg><span class=\"ds-step\">3</span></span><span class=\"ds-name\">Applied</span><span class=\"ds-tagline\">Sent. Refreshing inbox is not a strategy.</span><strong>12</strong><small>25% of cohort</small></div>",
+      "css": ".ds-checkpoint{display:flex;flex-direction:column;align-items:center;padding:14px 4px;border:0;background:transparent;color:#172d4d;font-family:\"Manrope Variable\",sans-serif}.ds-art{position:relative;width:104px;height:91px;border:1.5px solid #285840;border-radius:50% 50% 45% 45%;background:#fff9eb}.ds-art svg{width:80px;height:64px;margin:10px 10px 0}.ds-step{position:absolute;top:-4px;left:-2px;display:grid;place-items:center;width:23px;height:23px;border:1px solid #285840;border-radius:50%;background:#fff9eb;color:#285840;font-size:11px;font-weight:750}.ds-name{margin-top:10px;font-size:13px;line-height:1.3;font-weight:750}.ds-checkpoint strong{margin-top:4px;font:30px/1.1 \"DM Serif Display\",serif}.ds-checkpoint small{margin-top:3px;font-size:10px;line-height:1.4;color:#52604f}.ds-checkpoint:hover{color:#285840}.ds-checkpoint:hover .ds-art .ds-art{background:#e2ebd7}@media(prefers-reduced-motion:no-preference){.ds-art{transition:transform 180ms cubic-bezier(0.16,1,0.3,1),background-color 180ms ease-out}.ds-checkpoint:hover .ds-art{transform:translateY(-3px) rotate(-2deg)}} .ds-tagline{font-size:11px;line-height:1.5;text-align:center;color:#52604f;margin:6px 0;max-width:25ch}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Atlas",
+    "overview": "An editorial atlas of a personal job search: paper, navy ink, serif headlines, illustrated Hiring Gauntlet checkpoints with visible taglines, a forest-green route, and a separate muted-red rejection area. Flat, ruled analytical spreads and a fictional application ledger carry the same identity through the entire dashboard.",
+    "keyCharacteristics": [
+      "Paper canvas, navy ink, and a cream Hiring Gauntlet board with green route and separate red rejection area.",
+      "DM Serif Display headlines and numbers with Manrope controls.",
+      "Fixed desktop index and responsive top navigation.",
+      "Current-status route, ruled chart spreads, and synthetic ledger."
+    ],
+    "rules": [
+      {
+        "name": "Labeled color",
+        "body": "Forest green marks the typical route toward Offer, muted red marks the separate Rejected outcome; every checkpoint has an explicit label, count, and share of all filtered opportunities. Offer does not imply acceptance.",
+        "section": "colors"
+      },
+      {
+        "name": "Flat evidence",
+        "body": "Use rules and space for analytical sections; reserve shadows for definition popovers.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do preserve explicit live/demo labeling and denominators.",
+      "Do retain chart tables, keyboard focus, and reduced-motion behavior.",
+      "Do keep Explorer controls independent of aggregate filters."
+    ],
+    "donts": [
+      "Do not imply historical transitions or conversion rates.",
+      "Do not position Rejected as the next stage after Offer.",
+      "Do not expose private records or replace the synthetic ledger with live rows."
+    ]
+  }
+}
