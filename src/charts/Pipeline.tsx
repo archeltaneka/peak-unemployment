@@ -86,8 +86,8 @@ export function Pipeline({
     >
       <header className="gauntlet-heading">
         <div>
-          <h2 id="journey-title">The Hiring Gauntlet</h2>
-          <p>A journey of hope, paperwork, and “just one more round.”</p>
+          <h2 id="journey-title">The Waiting Game</h2>
+          <p>From "Application Submitted" to "We Regret to Inform You."</p>
         </div>
         <p className="gauntlet-total">
           <strong>{number(total)}</strong>
@@ -175,7 +175,7 @@ export function Pipeline({
           <div className="gauntlet-rejected">
             {checkpoint("Rejected", stations[8].count)}
             <div>
-              <h3>A different ending.</h3>
+              <h3>A Different Ending.</h3>
               <p>{checkpointCopy.Rejected}</p>
               <p className="gauntlet-outcome-note">
                 Separate terminal outcome. Can occur after any submitted stage.

@@ -4,16 +4,23 @@ import type { DashboardData } from "../types/dashboard";
 import { Panel, Empty } from "../components/Panel";
 import { LazyChart } from "./LazyChart";
 import { shortDate } from "../lib/presentation";
+
+const GRADUATION_DATE = "2026-10-15";
+
 export function Activity({
   activity,
 }: {
   activity: DashboardData["activity"];
 }) {
-  const [period, setPeriod] = useState<"daily" | "weekly" | "monthly">(
-    "daily",
-  );
+  const [period, setPeriod] = useState<"daily" | "weekly" | "monthly">("daily");
   const [cumulative, setCumulative] = useState(false);
   const points = activity[period];
+  const showGraduation =
+    period === "daily" &&
+    !cumulative &&
+    points.length > 0 &&
+    points[0].date <= GRADUATION_DATE &&
+    points[points.length - 1].date >= GRADUATION_DATE;
   const traces: Data[] = [
     {
       ...(cumulative
@@ -50,7 +57,7 @@ export function Activity({
     });
   return (
     <Panel
-      title="Application activity"
+      title="Application Activity"
       description="Putting the work into looking for work."
       className="activity"
       actions={
@@ -94,6 +101,41 @@ export function Activity({
             height: 285,
             showlegend: false,
             bargap: 0.32,
+            margin: { l: 40, r: 16, t: showGraduation ? 40 : 16, b: 42 },
+            shapes: showGraduation
+              ? [
+                  {
+                    type: "line",
+                    xref: "x",
+                    x0: GRADUATION_DATE,
+                    x1: GRADUATION_DATE,
+                    yref: "paper",
+                    y0: 0,
+                    y1: 1,
+                    line: { color: "#172d4d", width: 1.5, dash: "dash" },
+                  },
+                ]
+              : [],
+            annotations: showGraduation
+              ? [
+                  {
+                    x: GRADUATION_DATE,
+                    xref: "x",
+                    y: 1,
+                    yref: "paper",
+                    yanchor: "bottom",
+                    xanchor:
+                      GRADUATION_DATE >
+                      points[Math.floor(points.length / 2)].date
+                        ? "right"
+                        : "left",
+                    yshift: 6,
+                    text: "Master’s graduation · Oct 15",
+                    showarrow: false,
+                    font: { size: 10, color: "#172d4d" },
+                  },
+                ]
+              : [],
             xaxis: {
               type: "date",
               showgrid: false,
@@ -127,6 +169,9 @@ export function Activity({
           ? " Average begins after seven observed calendar days; it includes prior days outside applied-date bounds."
           : ""}
         {activity.truncated ? " Display limited to the latest 3,661 days." : ""}
+        {showGraduation
+          ? " Dashed line: Master’s graduation on October 15, 2026."
+          : ""}
       </p>
       <details className="chart-data">
         <summary>View activity data</summary>

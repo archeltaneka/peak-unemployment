@@ -48,7 +48,7 @@ it("renders static checkpoints with current counts, cohort shares and a separate
       total: data.kpis.opportunities,
     }),
   );
-  expect(html).toContain("The Hiring Gauntlet");
+  expect(html).toContain("The Waiting Game");
   expect(html).toContain("AI found my dream job. The requirements found my nightmares.");
   expect(html).not.toContain("<button");
   expect(html).not.toContain('role="tooltip"');

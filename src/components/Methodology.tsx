@@ -5,7 +5,7 @@ export function Methodology() {
   return (
     <section className="methodology" id="methodology">
       <div>
-        <h2>A little context behind the counts.</h2>
+        <h2>A Little Context Behind the Counts.</h2>
         <p>Job searching is messy. The analytics shouldn’t be.</p>
         <p>
           I'm a Data Scientist who spent enough time applying for jobs that I

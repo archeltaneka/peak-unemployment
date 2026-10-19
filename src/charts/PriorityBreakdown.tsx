@@ -23,7 +23,7 @@ export function PriorityBreakdown({
   return (
     <Panel
       title="Application Priority Breakdown"
-      description="Priority tiers · eligible submissions in this filtered view"
+      description="Priority tiers"
       className="distribution"
     >
       {ordered.length ? (

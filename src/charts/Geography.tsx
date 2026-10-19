@@ -19,8 +19,8 @@ export function Geography({
   return (
     <Panel
       id="geography"
-      title="The search, mapped"
-      description="Eligible submissions by country. Select a country to explore."
+      title="Unemployment Without Borders"
+      description="Taking rejection to an international level. Select a country to explore."
       className="geography"
       actions={
         selected ? (

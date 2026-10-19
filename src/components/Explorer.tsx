@@ -33,22 +33,13 @@ export function Explorer() {
   return (
     <Panel
       id="explorer"
-      title="Application explorer"
+      title="Application Explorer"
       description="Explore applications by company, role and current status."
       className="explorer"
-      actions={
-        <span className={data?.mode === "live" ? "live-badge" : "demo-badge"}>
-          {data
-            ? data.mode === "live"
-              ? "Live application records"
-              : "Synthetic demo records"
-            : "Connecting to source"}
-        </span>
-      }
     >
       <p className="demo-explanation">
         {data?.mode === "live"
-          ? "Approved application fields from the Google Sheet. Notes, URLs and contacts stay private."
+          ? "Approved application fields. Notes, URLs and contacts stay private."
           : data
             ? "Demo mode uses fictional application records."
             : "Application records are loaded from the configured data source."}{" "}

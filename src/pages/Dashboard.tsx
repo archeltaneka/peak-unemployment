@@ -94,7 +94,7 @@ export default function Dashboard() {
         </div>
         {error && (
           <div className="error-state" role="alert">
-            <h2>Taking a brief pause.</h2>
+            <h2>Taking a Brief Pause.</h2>
             <p>{error}</p>
             <button onClick={retry}>Try again</button>
           </div>
@@ -118,7 +118,7 @@ export default function Dashboard() {
             <div className="evidence-spread" id="activity">
               <Activity activity={data.activity} />
               <aside className="metrics-aside" aria-labelledby="metrics-title">
-                <h2 id="metrics-title">Submission metrics</h2>
+                <h2 id="metrics-title">Submission Metrics</h2>
                 <p>Dates verified. Definitions included.</p>
                 <Kpis values={data.kpis} />
               </aside>
@@ -157,14 +157,14 @@ export default function Dashboard() {
             />
             <div className="distribution-grid">
               <Distribution
-                title="Role distribution"
-                description="Where the skills might fit · submissions"
+                title="Role Distribution"
+                description="Where the skills might fit"
                 groups={data.roles}
                 total={data.kpis.submitted}
               />
               <Distribution
-                title="Application sources"
-                description="Where the opportunities started · submissions"
+                title="Application Sources"
+                description="Where the opportunities started"
                 groups={data.sources}
                 total={data.kpis.submitted}
                 color="#59799a"
@@ -175,7 +175,7 @@ export default function Dashboard() {
               />
             </div>
             <Panel
-              title="Worth a follow-up"
+              title="Worth a Follow-Up"
               description="Valid follow-up dates for active applications in this cohort."
               className="followup"
             >
