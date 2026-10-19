@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { fetchDashboard, latestRequest } from "../lib/api";
+import { dateRangeError } from "../lib/filterValidation";
 import type { DashboardFilters, DashboardResponse } from "../types/dashboard";
 export function useDashboard(filters: DashboardFilters) {
   const [data, setData] = useState<DashboardResponse>();
@@ -7,8 +8,15 @@ export function useDashboard(filters: DashboardFilters) {
   const [loading, setLoading] = useState(true);
   const [attempt, setAttempt] = useState(0);
   const requests = useRef(latestRequest<DashboardResponse>());
+  const validationError = dateRangeError(filters);
   useEffect(() => {
     const request = requests.current;
+    if (validationError) {
+      request.cancel();
+      setLoading(false);
+      setError("");
+      return;
+    }
     setLoading(true);
     setError("");
     void request.run(
@@ -25,6 +33,12 @@ export function useDashboard(filters: DashboardFilters) {
       },
     );
     return () => request.cancel();
-  }, [filters, attempt]);
-  return { data, error, loading, retry: () => setAttempt((n) => n + 1) };
+  }, [filters, attempt, validationError]);
+  return {
+    data,
+    error,
+    loading,
+    validationError,
+    retry: () => setAttempt((n) => n + 1),
+  };
 }

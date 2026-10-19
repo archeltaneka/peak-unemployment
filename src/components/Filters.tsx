@@ -10,10 +10,12 @@ export function Filters({
   filters,
   options,
   onChange,
+  validationError = "",
 }: {
   filters: DashboardFilters;
   options: DashboardData["options"];
   onChange: (f: DashboardFilters) => void;
+  validationError?: string;
 }) {
   const update = (key: keyof DashboardFilters, value: string) =>
     onChange({ ...filters, [key]: value || undefined });
@@ -76,6 +78,7 @@ export function Filters({
       <details className="filter-more">
         <summary>
           Dates, source &amp; tier
+          {validationError ? " · check date range" : ""}
           {[filters.from, filters.to, filters.source, filters.tier].filter(
             Boolean,
           ).length
@@ -90,6 +93,10 @@ export function Filters({
               min="2000-01-01"
               max="2100-12-31"
               value={filters.from ?? ""}
+              aria-invalid={!!validationError}
+              aria-describedby={
+                validationError ? "date-range-error" : undefined
+              }
               onChange={(e) => update("from", e.target.value)}
             />
           </label>
@@ -100,12 +107,21 @@ export function Filters({
               min={filters.from ?? "2000-01-01"}
               max="2100-12-31"
               value={filters.to ?? ""}
+              aria-invalid={!!validationError}
+              aria-describedby={
+                validationError ? "date-range-error" : undefined
+              }
               onChange={(e) => update("to", e.target.value)}
             />
           </label>
           {dimension("source")}
           {dimension("tier")}
         </div>
+        {validationError && (
+          <p id="date-range-error" className="filter-error" role="alert">
+            {validationError}
+          </p>
+        )}
         <p className="filter-note">
           Dates select opportunities by{" "}
           <strong>

@@ -7,6 +7,7 @@ import { Kpis } from "../components/Kpis";
 import { Panel } from "../components/Panel";
 import { Explorer } from "../components/Explorer";
 import { Methodology } from "../components/Methodology";
+import { cohortSummary, reportingTime } from "../lib/presentation";
 import { CreatorLinks } from "../components/CreatorLinks";
 import { Activity } from "../charts/Activity";
 import { Pipeline } from "../charts/Pipeline";
@@ -16,7 +17,8 @@ export default function Dashboard() {
   const [filters, setFilters] = useState<DashboardFilters>({
     dateBasis: "applied",
   });
-  const { data, loading, error, retry } = useDashboard(filters);
+  const { data, loading, error, validationError, retry } =
+    useDashboard(filters);
   return (
     <>
       <a className="skip-link" href="#main">
@@ -34,12 +36,13 @@ export default function Dashboard() {
         </a>
         <CreatorLinks className="mobile-creator-links" />
         <p className="brand-description">
-         Tracking applications, rejections,
-          <br />and questionable career decisions.
+          Tracking applications, rejections,
+          <br />
+          and questionable career decisions.
         </p>
         <nav aria-label="Main navigation">
           <a href="#overview">Overview</a>
-          <a href="#journey">The journey</a>
+          <a href="#journey">Current Status</a>
           <a href="#activity">Activity</a>
           <a href="#geography">Geography</a>
           <a href="#explorer">Explorer</a>
@@ -60,17 +63,21 @@ export default function Dashboard() {
           <div className="provenance">
             <CreatorLinks className="desktop-creator-links" />
             {data && (
-              <small>
-                As of {data.today} · {data.timezone}
-                <br />
-                {data.mode === "demo"
-                  ? "Fixed demo reporting date"
-                  : "Source refreshed " +
-                    new Date(data.fetchedAt).toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-              </small>
+              <div className="data-provenance">
+                <span
+                  className={data.mode === "live" ? "live-badge" : "demo-badge"}
+                >
+                  {data.mode === "live" ? "Live aggregates" : "Demo aggregates"}
+                </span>
+                <small>
+                  As of {data.today} · {data.timezone}
+                  <br />
+                  {data.mode === "demo"
+                    ? "Fixed demo reporting date"
+                    : "Source refreshed " +
+                      reportingTime(data.fetchedAt, data.timezone)}
+                </small>
+              </div>
             )}
           </div>
         </div>
@@ -79,18 +86,28 @@ export default function Dashboard() {
             filters={filters}
             options={data.options}
             onChange={setFilters}
+            validationError={validationError}
           />
         )}
-        <div aria-live="polite" className="request-status">
-          {loading
+        <div
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+          className="request-status"
+        >
+          {validationError
             ? data
-              ? "Updating your view…"
-              : "Loading application analytics…"
-            : error
-              ? "Dashboard could not be refreshed."
-              : data
-                ? ``
-                : ""}
+              ? `Date range not applied. Showing the last successful view: ${data.kpis.opportunities.toLocaleString("en")} opportunities. ${cohortSummary(data.filters)}.`
+              : "Correct the date range to load application analytics."
+            : loading
+              ? data
+                ? "Updating your view…"
+                : "Loading application analytics…"
+              : error
+                ? "Dashboard could not be refreshed."
+                : data
+                  ? `${data.kpis.opportunities.toLocaleString("en")} opportunities in this view. ${cohortSummary(data.filters)}.`
+                  : ""}
         </div>
         {error && (
           <div className="error-state" role="alert">
@@ -114,43 +131,53 @@ export default function Dashboard() {
             }
             aria-busy={loading}
           >
+            <section
+              className="overview-metrics"
+              aria-labelledby="metrics-title"
+            >
+              <h2 id="metrics-title">The Search at a Glance</h2>
+              <p>
+                Current counts. Submission metrics require valid dates and no
+                submission conflicts.
+              </p>
+              <Kpis values={data.kpis} />
+              {(data.quality.records > 0 ||
+                data.quality.missingFilterDates > 0) && (
+                <details className="quality">
+                  <summary>
+                    <span className="quality-icon">!</span>Data quality:{" "}
+                    {data.quality.records} flagged records
+                    {data.quality.missingFilterDates
+                      ? ` · ${data.quality.missingFilterDates} excluded for missing filter dates`
+                      : ""}
+                    <span className="quality-link">Review notes</span>
+                  </summary>
+                  <p>
+                    Conflicting records are excluded from affected submission
+                    metrics. Issue counts can overlap.
+                  </p>
+                  <ul>
+                    {data.quality.issues.map((i) => (
+                      <li key={i.label}>
+                        {i.label}: <strong>{i.count}</strong>
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              )}
+            </section>
             <Pipeline groups={data.pipeline} total={data.kpis.opportunities} />
             <div className="evidence-spread" id="activity">
               <Activity activity={data.activity} />
-              <aside className="metrics-aside" aria-labelledby="metrics-title">
-                <h2 id="metrics-title">Submission Metrics</h2>
-                <p>Dates verified. Definitions included.</p>
-                <Kpis values={data.kpis} />
-              </aside>
             </div>
-            {(data.quality.records > 0 ||
-              data.quality.missingFilterDates > 0) && (
-              <details className="quality">
-                <summary>
-                  <span className="quality-icon">!</span>Data quality:{" "}
-                  {data.quality.records} flagged records
-                  {data.quality.missingFilterDates
-                    ? ` · ${data.quality.missingFilterDates} excluded for missing filter dates`
-                    : ""}
-                  <span className="quality-link">Review notes</span>
-                </summary>
-                <p>
-                  Conflicting records are excluded from affected submission
-                  metrics. Issue counts can overlap.
-                </p>
-                <ul>
-                  {data.quality.issues.map((i) => (
-                    <li key={i.label}>
-                      {i.label}: <strong>{i.count}</strong>
-                    </li>
-                  ))}
-                </ul>
-              </details>
-            )}
+            <p className="cohort-context">
+              <strong>Aggregate view:</strong> {cohortSummary(data.filters)}.{" "}
+              All charts below share these filters; Explorer is separate.
+            </p>
             <Geography
               groups={data.geography}
               total={data.kpis.submitted}
-              selected={filters.country}
+              selected={data.filters.country}
               onSelect={(country) =>
                 setFilters({ ...filters, country: country || undefined })
               }
@@ -216,10 +243,16 @@ export default function Dashboard() {
         <footer>
           <div className="creator-attribution">
             <p className="creator-name">Built by Archel Taneka</p>
-            <p><em>Still optimizing the job search. At least the dashboard works.</em></p>
+            <p>
+              <em>
+                Still optimizing the job search. At least the dashboard works.
+              </em>
+            </p>
           </div>
           <CreatorLinks />
-          <a className="back-to-top" href="#overview">Back to top</a>
+          <a className="back-to-top" href="#overview">
+            Back to top
+          </a>
         </footer>
       </main>
     </>

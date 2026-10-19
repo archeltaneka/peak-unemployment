@@ -13,14 +13,3 @@ export function cohortShare(
 ): number | null {
   return count === null || total <= 0 ? null : (count / total) * 100;
 }
-
-/** Furthest populated current status on the typical route; not historical progress. */
-export function furthestJourneyStage(groups: Group[]): number {
-  return journeyStations(groups)
-    .slice(0, 8)
-    .reduce(
-      (furthest, station, index) =>
-        (station.count ?? 0) > 0 ? index : furthest,
-      -1,
-    );
-}

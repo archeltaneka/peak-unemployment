@@ -1,36 +1,21 @@
-import type { CSSProperties } from "react";
 import type { Group, Status } from "../types/dashboard";
 import { number } from "../lib/presentation";
-import {
-  cohortShare,
-  journeyStations,
-  furthestJourneyStage,
-} from "../lib/journey";
+import { cohortShare, journeyStations } from "../lib/journey";
 import { CheckpointArt } from "./CheckpointArt";
 import "./HiringGauntlet.css";
 
 const checkpointCopy: Record<Status, string> = {
-  Discovered: "AI found my dream job. The requirements found my nightmares.",
-  Preparing: "Prompt engineering my way into pretending I'm qualified.",
-  Applied: "My AI-generated CV is fighting their AI-powered ATS.",
-  "Recruiter Screen": "Passed the CAPTCHA. Apparently I'm human enough.",
-  Interview: "ChatGPT prepared me for questions nobody asked.",
-  Technical: "Training data ended right before this question.",
-  Final: "At this point, even my hallucinations have imposter syndrome.",
-  Offer: "After 200 prompts, the universe finally returned 200 OK.",
-  Rejected: "Their AI and my AI have agreed I'm unemployed.",
-  Unknown: "The paperwork has wandered off-map.",
+  Discovered: "An opportunity worth a closer look.",
+  Preparing: "Research, résumé, and one more proofread.",
+  Applied: "Submitted. The waiting begins.",
+  "Recruiter Screen": "An initial conversation about the fit.",
+  Interview: "Experience meets questions.",
+  Technical: "Putting the skills to work.",
+  Final: "The last conversations before a decision.",
+  Offer: "An offer on the table; acceptance is separate.",
+  Rejected: "An outcome, not a step after Offer.",
+  Unknown: "No reliable status recorded.",
 };
-// Each segment ends at a checkpoint, so the highlight never overshoots it.
-const routeSegments = [
-  "M125 60H375",
-  "M375 60H625",
-  "M625 60H875",
-  "M875 60C1010 60 1010 320 875 320",
-  "M875 320H625",
-  "M625 320H375",
-  "M375 320H125",
-];
 function percentage(count: number | null, total: number) {
   const value = cohortShare(count, total);
   return value === null
@@ -46,7 +31,6 @@ export function Pipeline({
   total: number;
 }) {
   const stations = journeyStations(groups);
-  const furthest = furthestJourneyStage(groups);
   function checkpoint(label: Status, count: number | null, index?: number) {
     const share = percentage(count, total);
     return (
@@ -87,7 +71,7 @@ export function Pipeline({
       <header className="gauntlet-heading">
         <div>
           <h2 id="journey-title">The Waiting Game</h2>
-          <p>From "Application Submitted" to "We Regret to Inform You."</p>
+          <p>Current status snapshot — each record counted once.</p>
         </div>
         <p className="gauntlet-total">
           <strong>{number(total)}</strong>
@@ -98,11 +82,10 @@ export function Pipeline({
         </p>
       </header>
       <div className="gauntlet-board">
-        <div
-          className="gauntlet-route"
-          key={furthest}
-          style={{ "--pulse-delay": `${Math.max(0, furthest) * 220}ms` } as CSSProperties}
-        >
+        <p className="gauntlet-route-disclaimer">
+          Route illustrates typical order, not recorded movement or conversion.
+        </p>
+        <div className="gauntlet-route">
           <svg
             className="gauntlet-track"
             viewBox="0 0 1000 520"
@@ -115,55 +98,13 @@ export function Pipeline({
               d="M125 60H875C1010 60 1010 320 875 320H125"
               className="gauntlet-track-stitches"
             />
-            {routeSegments.slice(0, Math.max(0, furthest)).map((d, index) => (
-              <path
-                key={d}
-                d={d}
-                pathLength={1}
-                className="gauntlet-track-progress"
-                style={{ "--path-delay": `${index * 220}ms` } as CSSProperties}
-              />
-            ))}
-            {furthest > 0 && (
-              <path
-                className="gauntlet-track-sweep"
-                d={routeSegments.slice(0, furthest).map((segment, index) =>
-                  index === 0 ? segment : segment.replace(/^M\d+ \d+/, ""),
-                ).join(" ")}
-                pathLength={1}
-              />
-            )}
           </svg>
-          {furthest > 0 && (
-            <svg
-              className="gauntlet-mobile-sweep"
-              viewBox="0 0 10 7"
-              preserveAspectRatio="none"
-              aria-hidden="true"
-              focusable="false"
-            >
-              <path
-                className="gauntlet-track-sweep"
-                d={`M5 0V${furthest}`}
-                pathLength={1}
-                vectorEffect="non-scaling-stroke"
-              />
-            </svg>
-          )}
           <ol
             className="gauntlet-stages"
-            aria-label="Typical hiring journey checkpoints"
+            aria-label="Current application statuses"
           >
             {stations.slice(0, 8).map(({ label, count }, index) => (
-              <li
-                key={label}
-                className={
-                  index < furthest ? "gauntlet-path-active" : undefined
-                }
-                style={{ "--path-delay": `${index * 220}ms` } as CSSProperties}
-              >
-                {checkpoint(label, count, index)}
-              </li>
+              <li key={label}>{checkpoint(label, count, index)}</li>
             ))}
           </ol>
         </div>

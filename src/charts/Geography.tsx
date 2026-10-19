@@ -20,7 +20,7 @@ export function Geography({
     <Panel
       id="geography"
       title="Unemployment Without Borders"
-      description="Taking rejection to an international level. Select a country to explore."
+      description="Submitted applications by country. Selecting a country filters all dashboard aggregates."
       className="geography"
       actions={
         selected ? (

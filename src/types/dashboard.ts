@@ -51,6 +51,9 @@ export interface DashboardData {
     interviews: number;
     offers: number;
     rejections: number;
+    submittedToday: number;
+    weeklyDailyAverage: number;
+    monthlyDailyAverage: number;
   };
   activity: {
     daily: ActivityPoint[];
@@ -75,7 +78,7 @@ export interface DashboardResponse extends DashboardData {
   fetchedAt: string;
 }
 
-// Approved public row fields. Never extend this with raw spreadsheet records.
+// Approved public Explorer fields. Never extend this with private Sheet columns.
 export interface ExplorerRecord {
   id: number;
   company: string;

@@ -1,4 +1,5 @@
 import type { DashboardFilters, DashboardResponse } from "../types/dashboard";
+import { dateRangeError } from "./filterValidation";
 export function latestRequest<T>() {
   let version = 0,
     controller: AbortController | undefined;
@@ -28,6 +29,8 @@ export async function fetchDashboard(
   filters: DashboardFilters,
   signal: AbortSignal,
 ): Promise<DashboardResponse> {
+  const validationError = dateRangeError(filters);
+  if (validationError) throw new Error(validationError);
   const query = new URLSearchParams();
   Object.entries(filters).forEach(([key, value]) => {
     if (value) query.set(key, value);

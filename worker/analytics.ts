@@ -100,6 +100,13 @@ export function buildDashboard(
   const dimensions = all.filter((r) => matchesDimensions(r, filters));
   const rows = dimensions.filter((r) => matchesDates(r, filters));
   const submitted = rows.filter((r) => r.submitted);
+  const currentWeekStart = weekStart(today);
+  const currentMonthStart = `${today.slice(0, 7)}-01`;
+  // Calendar denominators include today (in progress) and zero-submission days.
+  // Cohort filters affect the numerator, never the elapsed calendar period.
+  const dailyAverageSince = (start: string) =>
+    submitted.filter((r) => r.applied! >= start && r.applied! <= today).length /
+    (dayDifference(start, today) + 1);
   const active = submitted.filter((r) => activeStatuses.includes(r.status));
   const history = (filters.dateBasis === "applied" ? dimensions : rows).filter(
     (r) => r.submitted,
@@ -117,6 +124,9 @@ export function buildDashboard(
       interviews: active.filter((r) => r.status !== "Applied").length,
       offers: submitted.filter((r) => r.status === "Offer").length,
       rejections: submitted.filter((r) => r.status === "Rejected").length,
+      submittedToday: submitted.filter((r) => r.applied === today).length,
+      weeklyDailyAverage: dailyAverageSince(currentWeekStart),
+      monthlyDailyAverage: dailyAverageSince(currentMonthStart),
     },
     activity: activity(submitted, history, filters, today),
     pipeline: statuses.map((label) => ({

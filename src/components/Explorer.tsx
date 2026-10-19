@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useExplorer } from "../hooks/useExplorer";
 import { filterExplorer, type SortKey } from "../lib/explorer";
-import { statusColors } from "../lib/presentation";
+import { statusColors, reportingTime } from "../lib/presentation";
 import { Panel, Empty } from "./Panel";
 const columns: [SortKey, string][] = [
   ["company", "Company"],
@@ -33,23 +33,28 @@ export function Explorer() {
   return (
     <Panel
       id="explorer"
-      title="Application Explorer"
+      title={
+        data
+          ? `${data.mode === "live" ? "Live" : "Demo"} Application Explorer`
+          : "Application Explorer"
+      }
       description="Explore applications by company, role and current status."
       className="explorer"
     >
       <p className="demo-explanation">
         {data?.mode === "live"
-          ? "Approved application fields. Notes, URLs and contacts stay private."
+          ? "Only approved application fields are public; notes, URLs and contacts stay private."
           : data
             ? "Demo mode uses fictional application records."
-            : "Application records are loaded from the configured data source."}{" "}
-        These controls are independent of the dashboard filters above.
+            : "Loading application data from the configured source."}{" "}
+        These controls are independent of dashboard filters.
         {data && (
           <span>
             {" "}
-            Source refreshed {new Date(data.fetchedAt).toLocaleTimeString()}.
-            {data.mode === "demo" &&
-              ` Fixed demo reporting date: ${data.today}.`}
+            As of {data.today} · {data.timezone}.
+            {data.mode === "demo"
+              ? " Fixed demo reporting date."
+              : ` Source refreshed ${reportingTime(data.fetchedAt, data.timezone)}.`}
           </span>
         )}
       </p>
@@ -97,6 +102,16 @@ export function Explorer() {
               </select>
             </label>
           </div>
+          <button
+            className="explorer-reset text-button"
+            disabled={!filters.search && !filters.country && !filters.status}
+            onClick={() => {
+              setFilters({ search: "", country: "", status: "" });
+              setPage(0);
+            }}
+          >
+            Clear Explorer filters
+          </button>
           <p className="table-scroll-hint" id="explorer-scroll-hint">
             Scroll horizontally to view all columns.
           </p>
@@ -134,23 +149,25 @@ export function Explorer() {
                         }}
                       >
                         {label}
-                        <svg
-                          aria-hidden="true"
-                          width="12"
-                          height="12"
-                          viewBox="0 0 12 12"
-                        >
-                          <path
-                            d={
-                              sort === key && !descending
-                                ? "m3 8 3-4 3 4"
-                                : "m3 4 3 4 3-4"
-                            }
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="1.5"
-                          />
-                        </svg>
+                        {sort === key && (
+                          <svg
+                            aria-hidden="true"
+                            width="12"
+                            height="12"
+                            viewBox="0 0 12 12"
+                          >
+                            <path
+                              d={
+                                sort === key && !descending
+                                  ? "m3 8 3-4 3 4"
+                                  : "m3 4 3 4 3-4"
+                              }
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="1.5"
+                            />
+                          </svg>
+                        )}
                       </button>
                     </th>
                   ))}
@@ -179,10 +196,13 @@ export function Explorer() {
             </table>
           </div>
           {!rows.length && (
-            <Empty>No application records match. Try a broader search.</Empty>
+            <Empty>
+              No applications match. Broaden your search or clear the Explorer
+              filters.
+            </Empty>
           )}
           <div className="pagination">
-            <span>
+            <span role="status" aria-live="polite" aria-atomic="true">
               {rows.length ? current * 8 + 1 : 0}–
               {Math.min(current * 8 + 8, rows.length)} of {rows.length} records
             </span>

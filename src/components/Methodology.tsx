@@ -58,14 +58,15 @@ export function Methodology() {
         <details>
           <summary>What is public, and what stays private?</summary>
           <p>
-            Live mode exposes aggregate counts and approved application fields:
-            company, role, country, source, tier, current status and application
-            date. Notes, URLs, contacts and credentials stay private. Unknown
-            category labels are grouped as Unknown. Explorer controls are
-            independent of dashboard filters; missing or invalid application
-            dates do not imply an application was never submitted. Demo mode
-            uses fictional records. Live records identify individual
-            applications.
+            Live charts show aggregate counts. The Live Application Explorer
+            publishes only approved fields from Google Sheets: company, role,
+            country, source, tier, current status and application date. Notes,
+            URLs, contacts, credentials and all other source fields stay
+            private. Unrecognized categories are grouped as Unknown. Explorer
+            search, filters and sorting are independent of dashboard filters.
+            Demo mode uses fictional records with a fixed reporting date of
+            2026-10-15. Missing dates do not imply an application was never
+            submitted.
           </p>
         </details>
       </div>

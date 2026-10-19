@@ -47,7 +47,7 @@ Prioritize analytical correctness, privacy, maintainability, and clear visual co
 - Never expose service-account credentials or secrets.
 - Never return raw private spreadsheet records through public endpoints.
 - Never expose Notes, private URLs, recruiter contact information, or unreviewed individual application details.
-- Use aggregated live data and sanitized demo records.
+- Use aggregated live data and approved Explorer fields; retain sanitized demo records for demo mode.
 - Never commit raw CSV exports or credentials.
 - Keep production secrets in Cloudflare Worker secrets.
 - Review API responses for potential sensitive-data leakage.
@@ -123,7 +123,7 @@ Never claim functionality has been verified unless the relevant checks actually 
 
 - Use `bun run check` before reporting completion; it runs Vitest, strict TypeScript, and the production build.
 - `worker/` owns private source data, normalization, and aggregation. Never import it into `src/`.
-- Shared API contracts live in `src/types/dashboard.ts`; only reviewed demo records may enter the frontend.
+- Shared API contracts live in `src/types/dashboard.ts`; only reviewed aggregate responses and approved Explorer fields may enter the frontend.
 - Public dimensions must use the reviewed taxonomies in `worker/schemas.ts`. Unrecognized source labels become Unknown; never echo arbitrary sheet cells.
 - Use date-only ISO strings and an explicit reporting timezone. Weekly buckets start Monday.
 - Cache source rows only in Worker memory. Never persist private rows in the public Cache API.
@@ -137,4 +137,4 @@ Never claim functionality has been verified unless the relevant checks actually 
 - Demo reporting date is fixed at 2026-10-15 for reproducible examples and must stay visibly labeled.
 - Source date cells must be formatted as ISO `yyyy-mm-dd`; never guess regional date formats.
 - Plotly uses a custom bar/scatter/scattergeo bundle in `src/charts/plotly.ts`; keep map topology and fonts self-hosted.
-- Application Explorer controls are independent of the live aggregate cohort and operate only on the reviewed synthetic JSON fixture.
+- Application Explorer controls are independent of the aggregate cohort. In live mode, expose only Company, Role, Country, Source, Tier, Status and Date Applied through the Worker allowlist; never spread raw Sheet rows. Demo mode uses fictional records. Live Explorer must fail closed when the Sheet is unavailable.

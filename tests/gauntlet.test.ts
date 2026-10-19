@@ -5,11 +5,7 @@ import { Pipeline } from "../src/charts/Pipeline";
 import { buildDashboard } from "../worker/analytics";
 import { normalizeRecords } from "../worker/normalize";
 import { parseFilters } from "../worker/filters";
-import {
-  cohortShare,
-  journeyStations,
-  furthestJourneyStage,
-} from "../src/lib/journey";
+import { cohortShare, journeyStations } from "../src/lib/journey";
 import type { SourceRecord } from "../worker/schemas";
 const today = "2026-10-15";
 const rows: SourceRecord[] = [
@@ -49,11 +45,14 @@ it("renders static checkpoints with current counts, cohort shares and a separate
     }),
   );
   expect(html).toContain("The Waiting Game");
-  expect(html).toContain("AI found my dream job. The requirements found my nightmares.");
+  expect(html).toContain("Current status snapshot");
+  expect(html.indexOf("each record counted once")).toBeLessThan(
+    html.indexOf('class="gauntlet-board"'),
+  );
   expect(html).not.toContain("<button");
   expect(html).not.toContain('role="tooltip"');
   expect(html).not.toContain('id="gauntlet-details"');
-  expect(html).toContain("Typical hiring journey");
+  expect(html).toContain("Current application statuses");
   expect(html).toContain(
     'aria-label="Applied: 2 current records, 50% of filtered opportunities."',
   );
@@ -103,16 +102,22 @@ it("shows all eight zero-count checkpoints for an empty filtered cohort without 
   expect(html).not.toContain("NaN");
 });
 
-it("shortens the route highlight when global filtering removes later stages", () => {
-  const all = dashboard();
-  const australia = dashboard("country=Australia");
-  const rejected = dashboard("status=Rejected");
-  expect(furthestJourneyStage(all.pipeline)).toBe(7);
-  expect(furthestJourneyStage(australia.pipeline)).toBe(2);
-  expect(furthestJourneyStage(rejected.pipeline)).toBe(-1);
+it("keeps the same illustrative route when filtering removes later statuses", () => {
+  const routes = ["", "country=Australia", "status=Rejected"].map((query) => {
+    const data = dashboard(query);
+    const html = renderToStaticMarkup(
+      createElement(Pipeline, {
+        groups: data.pipeline,
+        total: data.kpis.opportunities,
+      }),
+    );
+    return html.match(/<svg class="gauntlet-track"[\s\S]*?<\/svg>/)?.[0];
+  });
+  expect(routes[0]).toBeDefined();
+  expect(new Set(routes).size).toBe(1);
 });
 
-it("draws only the three route segments up to Recruiter Screen", () => {
+it("keeps the route static without implying historical progress", () => {
   const html = renderToStaticMarkup(
     createElement(Pipeline, {
       groups: [
@@ -122,7 +127,11 @@ it("draws only the three route segments up to Recruiter Screen", () => {
       total: 5,
     }),
   );
-  expect(html.match(/class="gauntlet-track-progress"/g)).toHaveLength(3);
-  expect(html).toContain('d="M125 60H375 H625 H875"');
-  expect(html).toContain('d="M5 0V3"');
+  expect(html).not.toContain("gauntlet-track-progress");
+  expect(html).not.toContain("gauntlet-track-sweep");
+  expect(html).not.toContain("gauntlet-path-active");
+  expect(html).not.toContain("gauntlet-heartbeat");
+  expect(html).toContain(
+    "Route illustrates typical order, not recorded movement or conversion.",
+  );
 });

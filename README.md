@@ -2,13 +2,13 @@
 
 **Because apparently even unemployment needs KPIs.**
 
-A public job application analytics dashboard and Product Analytics / Data Science portfolio project. Google Sheets stays private; the browser receives aggregate statistics and explicitly approved application fields. In live mode, Application Explorer reads company, role, country, source, tier, current status, and application date from the Sheet. Demo mode uses fictional records.
+A public job application analytics dashboard and Product Analytics / Data Science portfolio project. Google Sheets stays private; the browser receives aggregates and the approved fields shown in the Live Application Explorer. Explorer reads company, role, country, source, tier, current status and application date through the Worker. Demo mode uses fictional records.
 
-The Atlas interface combines a paper canvas, navy ink, cobalt selection, locally bundled DM Serif Display and Manrope, and an editorial index. A fixed desktop index becomes top navigation on smaller screens. Compact global filters lead into the current-status route; activity and submission metrics share a spread, followed by ruled charts and a fictional application ledger. See [DESIGN.md](DESIGN.md) for the visual system.
+The Atlas interface retains its paper canvas, navy ink, cobalt selection, locally bundled DM Serif Display and Manrope, and editorial index. Explicit live/demo provenance and a cohort summary introduce the overview metrics, followed by the illustrated current-status board, activity, breakdowns, and the application ledger. See [DESIGN.md](DESIGN.md) for the visual system.
 
-The Hiring Gauntlet presents **current status** as an illustrated board: Discovered, Preparing, Applied, Recruiter Screen, Interview, Technical, Final, and Offer. Authored inline SVG checkpoints follow a four-by-two serpentine route on desktop and a compact vertical list at 650px and below. Rejected is a separate terminal outcome that can occur after any submitted stage; Unknown appears separately when present or unavailable. Counts and shares use all filtered opportunities, including Rejected, Unknown, and submission conflicts. Offer does not imply acceptance.
+The status board presents **current status**, with each record counted once. Its four-by-two serpentine route illustrates typical order only: no path is highlighted from the data, and no movement or conversion is inferred. Rejected remains a separate terminal outcome; Unknown appears separately when present or unavailable. Counts and shares use all filtered opportunities, including submission conflicts. Offer does not imply acceptance.
 
-Each checkpoint displays its tagline, count, and cohort share directly, without buttons, tooltips or a detail panel. Hover gently lifts the artwork. A brief route reveal ends at the furthest populated current status in the filtered view and updates when that endpoint changes; Rejected and Unknown never extend the highlight. It indicates typical ordering, not observed recruitment transitions. After the reveal, the highlighted path gently pulses twice, then continues a subtle six-second idle pulse. Reduced motion shows a static highlight. Dates, source, and tier are available in the filter disclosure. Explorer controls remain independent of aggregate filters; its wide table supports local keyboard scrolling.
+On phones, metrics appear before the board. Status rows retain small illustrations, labels, counts, and shares; secondary taglines are hidden to shorten the reading path. Definitions and controls have enlarged touch targets. The route remains static. Only the short board entrance and artwork hover are animated, with reduced-motion support. Dates, source, and tier remain in the filter disclosure. Quality flags appear directly below the overview metrics. Invalid date ranges show an inline error without fetching; the last successful cohort remains visible and labeled until correction. Refresh clocks use the displayed reporting timezone, including its daylight-saving offset. Successful refreshes announce the cohort count; a repeated cohort summary explains lower charts. Explorer has independent search, filters, sorting, pagination and a clear-filters action, plus keyboard scrolling and a fixed company column on phones.
 
 ## Stack and architecture
 
@@ -20,7 +20,7 @@ One Cloudflare Worker serves the frontend and `/api/*`. There is no database, ac
 - `src/types/dashboard.ts` — public aggregate contracts. Frontend code never imports `worker/`.
 - `src/components/`, `src/charts/`, `src/pages/` — responsive UI, chart alternatives, and application explorer.
 - `data/demo/applications.csv` — fictional source fixture, bundled into the Worker only.
-- `data/demo/explorer.json` — legacy fictional fixture; Explorer now reads the Worker API in both modes.
+- `data/demo/explorer.json` — legacy fictional fixture; the Explorer API now uses the configured source in both modes.
 - `tests/` — calendar, analytics, source/authentication, public API privacy, and client race-condition tests.
 
 ## Run locally
@@ -107,7 +107,7 @@ bun run deploy
 
 Supply each value when prompted. For `GOOGLE_PRIVATE_KEY`, paste the PEM key or securely pipe the PEM file into that command. Keep files containing credentials outside this repository. Rotate/revoke service-account keys when no longer needed.
 
-If Wrangler needs the Worker to exist before uploading secrets, create it in the Cloudflare dashboard first, or deploy once before adding secrets. An unconfigured live deployment returns 503 for `/api/dashboard` and `/api/explorer` and never substitutes demo statistics.
+If Wrangler needs the Worker to exist before uploading secrets, create it in the Cloudflare dashboard first, or deploy once before adding secrets. An unconfigured live deployment returns 503 for both `/api/dashboard` and `/api/explorer`; neither endpoint substitutes demo data.
 
 `REPORTING_TIMEZONE` is a non-secret Wrangler variable; set it to your reporting IANA timezone. To deliberately publish a **demo-only** version, change `DATA_MODE` to `demo` in `wrangler.jsonc`, then deploy. The public UI will label it synthetic. Return that setting to `live` for live data.
 
@@ -115,6 +115,7 @@ Static assets and the API share one origin. `/api` and `/api/*` always run the W
 
 ## API and caching
 
+- `GET /api/explorer` — approved application fields from the configured source, with live/demo provenance, reporting date and source refresh time.
 - `GET /api/health` — Worker liveness only; does not test Google credentials.
 - `GET /api/dashboard` — reviewed aggregate statistics, quality issue counts, filter choices, source mode, reporting date, and source refresh time.
 
@@ -148,6 +149,8 @@ Unknown status with a valid, consistent applied date counts as submitted but can
 | Country / role / source / priority | Eligible submissions; percentages divide by the filtered submitted count                                                                                                                                             |
 | Follow-ups                         | Eligible active applications with valid Follow-up Date: before today = overdue, today = due, after today = upcoming                                                                                                  |
 
+Overview also includes **Submitted today**, **Daily average this week**, and **Daily average this month**. These count eligible submissions within the same selected cohort using Date Applied, even when the cohort uses Date Found. “Today” is the API reporting date in the configured reporting timezone (fixed at 2026-10-15 in demo mode). The week-to-date numerator covers Monday through today; the month-to-date numerator covers the first of the month through today. Each average divides by elapsed calendar days **including today and days with zero recorded submissions**, not just days with applications. Today is partial. Filters affect the numerator but do not shorten the calendar denominator. An empty cohort returns zero recorded submissions and zero averages. Averages retain full precision in the API and display up to two decimal places; they are not rolling or completed-period averages.
+
 Weeks start Monday. Activity includes intervening zero days. Today and buckets clipped by display boundaries are marked partial. Cumulative totals start at the display window. In daily mode, the trailing seven-calendar-day average is available only after seven observed days; it retains earlier applied-date history outside the displayed applied-date window, with all other cohort filters preserved. There is no invented observation history before the earliest eligible application.
 
 `Days Since Applied` and `Follow-up Flag` are ignored. Possible duplicates are flagged using Company + Role + Date Applied + Date Found (trimmed, case-insensitive), but never removed. This heuristic does not establish identity.
@@ -158,9 +161,9 @@ Application Priority Breakdown is a donut chart of eligible submissions after al
 
 Only reviewed public categories in `worker/schemas.ts` may appear in live responses. Matching ignores surrounding whitespace and letter case. Unknown/missing values become **Unknown** rather than being echoed. Priority tiers are `A`, `B`, `C`, and Unknown. `Tier A`, `Tier B`, and `Tier C` are accepted case-insensitively, with surrounding or repeated whitespace ignored. Missing and unrecognized values (including legacy numeric values) remain Unknown. Source headers are matched case-insensitively after trimming and collapsing whitespace; duplicate normalized headers are rejected. Synthetic demo tiers use the same A/B/C contract. Review and extend the country/role/source/tier allowlists deliberately if your tracker uses different categories; do not automatically expose arbitrary sheet cells. Country coordinates are approximate country centers, not applicant locations.
 
-`/api/dashboard` remains aggregate-only. `/api/explorer` publishes the approved fields Company, Role, Country, Source, Tier, Status, and Date Applied, plus a snapshot-local numeric row ID. Company and role are public text as explicitly approved; keep sensitive content out of those two source columns. Notes, City, Job URL, contacts, follow-up dates, spreadsheet identifiers, and all other columns stay private. Category values use reviewed taxonomies; missing or invalid dates remain null and are never interpreted as “not submitted.”
+`/api/dashboard` is aggregate-only. `/api/explorer` publishes only Company, Role, Country, Source, Tier, Status and Date Applied, plus a snapshot-local row ID. Company and role are public text; only put content intended for publication in these columns. Notes, City, Job URL, contacts, follow-up dates, spreadsheet identifiers, credentials and all other source fields stay private. Category values use reviewed taxonomies; missing or invalid dates remain null and are never interpreted as “not submitted.”
 
-Explorer controls remain independent of global aggregate filters. Both endpoints share the same 60-second Worker-memory source cache and return `Cache-Control: no-store`. Explorer loads independently, provides retry on errors, and never substitutes demo records when live access fails. Demo mode uses the same fictional CSV source as aggregate statistics, with the fixed reporting date 2026-10-15. No additional environment variables or Sheet columns are needed.
+Explorer controls are independent of aggregate filters. Both endpoints share the same 60-second Worker-memory source cache and return `Cache-Control: no-store`. Explorer loads independently and offers retry on errors. Live mode fails closed on source/configuration errors; it never substitutes fictional records. Demo mode uses the fictional CSV source with the fixed reporting date 2026-10-15. Explorer requires the same existing Sheet configuration as the aggregates; no new variables or columns are needed.
 
 Aggregates, especially small filtered groups, are **not a statistical anonymity guarantee**. Do not use this public dashboard for sensitive datasets requiring minimum-count suppression. Source row and raw error logging is intentionally absent. Keep `.dev.vars`, `.env`, PEM keys, raw CSV exports, build artifacts, and `data/private/` out of Git.
 

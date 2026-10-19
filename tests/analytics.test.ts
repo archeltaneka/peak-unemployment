@@ -38,6 +38,9 @@ describe("eligibility and quality", () => {
       interviews: 1,
       offers: 1,
       rejections: 1,
+      submittedToday: 0,
+      weeklyDailyAverage: 0,
+      monthlyDailyAverage: 4 / 15,
     });
   });
   it("excludes submission conflicts but retains opportunities and snapshot", () => {
@@ -79,21 +82,34 @@ describe("eligibility and quality", () => {
 });
 describe("filters and distribution", () => {
   it("preserves original AI and ML role categories in distributions and filters", () => {
-    const rows = [row({ "Role Type": "AI Engineer" }), row({ "Role Type": "ML Engineer" })];
+    const rows = [
+      row({ "Role Type": "AI Engineer" }),
+      row({ "Role Type": "ML Engineer" }),
+    ];
     const d = run(rows);
-    expect(d.roles).toEqual(expect.arrayContaining([
-      { label: "AI Engineer", count: 1 },
-      { label: "ML Engineer", count: 1 },
-    ]));
-    expect(d.options.roleType).toEqual(expect.arrayContaining(["AI Engineer", "ML Engineer"]));
+    expect(d.roles).toEqual(
+      expect.arrayContaining([
+        { label: "AI Engineer", count: 1 },
+        { label: "ML Engineer", count: 1 },
+      ]),
+    );
+    expect(d.options.roleType).toEqual(
+      expect.arrayContaining(["AI Engineer", "ML Engineer"]),
+    );
     expect(run(rows, "roleType=ML+Engineer").kpis.submitted).toBe(1);
   });
   it("distinguishes blank role types from unreviewed labels without inventing a role", () => {
-    const rows = [row({ "Role Type": "  " }), row({ "Role Type": "private@example.com" })];
+    const rows = [
+      row({ "Role Type": "  " }),
+      row({ "Role Type": "private@example.com" }),
+    ];
     const d = run(rows);
     expect(d.roles).toContainEqual({ label: "Not specified", count: 1 });
     expect(d.roles).toContainEqual({ label: "Unknown", count: 1 });
-    expect(d.quality.issues).toContainEqual({ label: "Missing Role Type", count: 1 });
+    expect(d.quality.issues).toContainEqual({
+      label: "Missing Role Type",
+      count: 1,
+    });
     expect(run(rows, "roleType=Not+specified").kpis.submitted).toBe(1);
     expect(JSON.stringify(d)).not.toContain("private@example.com");
   });

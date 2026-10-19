@@ -20,7 +20,7 @@ Turn the tracker into a technically credible, engaging public analytics dashboar
 
 ## Capabilities and Constraints
 
-One Worker deployment, private Sheets source, aggregated live analytics, an Explorer of approved live application fields, consistent filters and definitions. No fabricated recruitment history, response rates, or conversion funnels. Only approved company, role, country, source, tier, status and application date fields may enter the Explorer; all other source fields stay private. Approved design and plan in docs/superpowers/.
+One Worker deployment, private Sheets source, aggregated live analytics, a live Explorer using approved Sheet fields, and consistent filters and definitions. No fabricated recruitment history, response rates, or conversion funnels. Only company, role, country, source, tier, status and application date may enter Explorer through the Worker allowlist. All other source fields remain private. Demo mode uses fictional records; live access fails closed. Explorer controls are independent of aggregate filters. Preserve the Atlas visual identity while prioritizing analytical clarity and mobile readability.
 
 ## Brand Commitments
 
