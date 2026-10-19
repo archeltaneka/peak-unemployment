@@ -47,6 +47,13 @@ bun run preview    # build and run the built Worker locally
 
 The initial frontend is separate from the lazy-loaded chart library. The Plotly bundle registers only bar, scatter, scattergeo, and pie traces. Fonts and map topology are self-hosted; charts do not request a third-party CDN at runtime.
 
+## Portfolio and source links
+
+The header, footer, and Methodology section use `src/lib/externalLinks.ts` as
+the single configuration for the public portfolio and GitHub URLs. Update
+`EXTERNAL_LINKS.portfolio` or `EXTERNAL_LINKS.github` there and rebuild to change
+destinations. All external links open in a new tab with `noopener noreferrer`.
+
 ## Google Sheets setup
 
 1. Create or choose a project in [Google Cloud Console](https://console.cloud.google.com/).

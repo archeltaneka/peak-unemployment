@@ -7,6 +7,7 @@ import { Kpis } from "../components/Kpis";
 import { Panel } from "../components/Panel";
 import { Explorer } from "../components/Explorer";
 import { Methodology } from "../components/Methodology";
+import { CreatorLinks } from "../components/CreatorLinks";
 import { Activity } from "../charts/Activity";
 import { Pipeline } from "../charts/Pipeline";
 import { Geography } from "../charts/Geography";
@@ -31,9 +32,10 @@ export default function Dashboard() {
           <br />
           Unemployment<span className="wordmark-dot">.</span>
         </a>
+        <CreatorLinks className="mobile-creator-links" />
         <p className="brand-description">
-          A job search, quantified.
-          <br />A personal analytics portfolio.
+         Tracking applications, rejections,
+          <br />and questionable career decisions.
         </p>
         <nav aria-label="Main navigation">
           <a href="#overview">Overview</a>
@@ -43,10 +45,6 @@ export default function Dashboard() {
           <a href="#explorer">Explorer</a>
           <a href="#methodology">Methodology</a>
         </nav>
-        <p className="header-note">
-          Same applications.
-          <br />A different perspective.
-        </p>
       </header>
       <main id="main">
         <div className="page-heading" id="overview">
@@ -60,6 +58,7 @@ export default function Dashboard() {
             <p>Because apparently even unemployment needs KPIs.</p>
           </div>
           <div className="provenance">
+            <CreatorLinks className="desktop-creator-links" />
             {data && (
               <small>
                 As of {data.today} · {data.timezone}
@@ -206,10 +205,7 @@ export default function Dashboard() {
                   <p>After {data.today}</p>
                 </div>
                 <p className="followup-note">
-                  A gentle nudge, not a crystal ball.
-                  <br />
-                  Calculated from dates and current status, never stored
-                  spreadsheet flags.
+                  Calculated from dates and current status.
                 </p>
               </div>
             </Panel>
@@ -218,11 +214,12 @@ export default function Dashboard() {
         <Explorer />
         <Methodology />
         <footer>
-          <span>
-            Peak Unemployment<span className="wordmark-dot">.</span>
-          </span>
-          <p>Built with data. Sustained by optimism.</p>
-          <a href="#overview">Back to top</a>
+          <div className="creator-attribution">
+            <p className="creator-name">Built by Archel Taneka</p>
+            <p><em>Still optimizing the job search. At least the dashboard works.</em></p>
+          </div>
+          <CreatorLinks />
+          <a className="back-to-top" href="#overview">Back to top</a>
         </footer>
       </main>
     </>

@@ -10,7 +10,7 @@ export function Activity({
   activity: DashboardData["activity"];
 }) {
   const [period, setPeriod] = useState<"daily" | "weekly" | "monthly">(
-    "weekly",
+    "daily",
   );
   const [cumulative, setCumulative] = useState(false);
   const points = activity[period];

@@ -1,9 +1,24 @@
+import { EXTERNAL_LINKS } from "../lib/externalLinks";
+import { ExternalLink } from "./ExternalLink";
+
 export function Methodology() {
   return (
     <section className="methodology" id="methodology">
       <div>
         <h2>A little context behind the counts.</h2>
         <p>Job searching is messy. The analytics shouldn’t be.</p>
+        <p>
+          I'm a Data Scientist who spent enough time applying for jobs that I
+          accidentally created a dataset. So I built this dashboard to
+          investigate it.
+        </p>
+        <ExternalLink
+          href={EXTERNAL_LINKS.portfolio}
+          label="Explore Archel Taneka’s other projects"
+          className="creator-projects"
+        >
+          Explore my other projects
+        </ExternalLink>
       </div>
       <div className="methodology-details">
         <details>
