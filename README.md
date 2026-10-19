@@ -1,20 +1,27 @@
 # Peak Unemployment
 
+[![Live site](https://img.shields.io/badge/Live_site-Visit_dashboard-2563EB?style=flat)](https://peak-unemployment.archeltaneka.workers.dev)
+[![License: MIT](https://img.shields.io/badge/License-MIT-22A06B?style=flat)](LICENSE)
+[![Last commit](https://img.shields.io/github/last-commit/archeltaneka/peak-unemployment?style=flat)](https://github.com/archeltaneka/peak-unemployment/commits)
+[![Repository size](https://img.shields.io/github/repo-size/archeltaneka/peak-unemployment?style=flat)](https://github.com/archeltaneka/peak-unemployment)
+
 **Because apparently even unemployment needs KPIs.**
 
-A public job application analytics dashboard and Product Analytics / Data Science portfolio project. Google Sheets stays private; the browser receives aggregates and the approved fields shown in the Live Application Explorer. Explorer reads company, role, country, source, tier, current status and application date through the Worker. Demo mode uses fictional records.
+A public job application analytics dashboard and Product Analytics / Data Science portfolio project. Google Sheets stays private; the browser receives aggregates and the approved fields shown in the Live Application Explorer. Explorer reads company, role, country, source, tier, current status and application date through the Worker.
 
 Public site: [peak-unemployment.archeltaneka.workers.dev](https://peak-unemployment.archeltaneka.workers.dev).
 
-The Atlas interface retains its paper canvas, navy ink, cobalt selection, locally bundled DM Serif Display and Manrope, and editorial index. Explicit live/demo provenance and a cohort summary introduce the overview metrics, followed by the illustrated current-status board, activity, breakdowns, and the application ledger. See [DESIGN.md](DESIGN.md) for the visual system.
-
-The status board presents **current status**, with each record counted once. Its four-by-two serpentine route illustrates typical order only: no path is highlighted from the data, and no movement or conversion is inferred. Rejected remains a separate terminal outcome; Unknown appears separately when present or unavailable. Counts and shares use all filtered opportunities, including submission conflicts. Offer does not imply acceptance.
-
-On phones, metrics appear before the board. Status rows retain small illustrations, labels, counts, and shares; secondary taglines are hidden to shorten the reading path. Definitions and controls have enlarged touch targets. The route remains static. Only the short board entrance and artwork hover are animated, with reduced-motion support. Dates, source, and tier remain in the filter disclosure. Quality flags appear directly below the overview metrics. Invalid date ranges show an inline error without fetching; the last successful cohort remains visible and labeled until correction. Refresh clocks use the displayed reporting timezone, including its daylight-saving offset. Successful refreshes announce the cohort count; a repeated cohort summary explains lower charts. Explorer has independent search, filters, sorting, pagination and a clear-filters action, plus keyboard scrolling and a fixed company column on phones.
-
 ## Stack and architecture
 
-Bun · React · strict TypeScript · Vite · Tailwind CSS · Plotly.js with react-plotly.js · Cloudflare Workers · Google Sheets API · Vitest.
+[![Bun](https://img.shields.io/badge/Bun-000000?style=flat&logo=bun&logoColor=white)](https://bun.sh/)
+[![React](https://img.shields.io/badge/React-149ECA?style=flat&logo=react&logoColor=white)](https://react.dev/)
+[![Strict TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat&logo=vite&logoColor=white)](https://vite.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-0891B2?style=flat&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Plotly.js with react-plotly.js](https://img.shields.io/badge/Plotly.js-3F4F75?style=flat)](https://github.com/plotly/react-plotly.js)
+[![Cloudflare Workers](https://img.shields.io/badge/Cloudflare_Workers-F38020?style=flat&logo=cloudflareworkers&logoColor=white)](https://developers.cloudflare.com/workers/)
+[![Google Sheets API](https://img.shields.io/badge/Google_Sheets_API-188038?style=flat&logo=googlesheets&logoColor=white)](https://developers.google.com/workspace/sheets/api)
+[![Vitest](https://img.shields.io/badge/Vitest-6E9F18?style=flat&logo=vitest&logoColor=white)](https://vitest.dev/)
 
 One Cloudflare Worker serves the frontend and `/api/*`. There is no database, account system, or secondary persistent data store.
 
